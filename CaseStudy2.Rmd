@@ -1,0 +1,25 @@
+---
+title: "CaseStudy2"
+author: "Kari Theobald"
+date: "4/3/2019"
+output:
+  html_document:
+    keep_md: yes
+---
+
+```{r, echo=TRUE, cache=TRUE}
+install.packages("readxl")
+library(readxl)
+setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2")
+New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2-data.xlsx")
+Data <- data.frame(New.Data)
+head(Data)
+Small.Data <- data.frame(New.Data$Attrition, New.Data$Age, New.Data$Gender, New.Data$MaritalStatus, New.Data$YearsAtCompany,   New.Data$Education, New.Data$JobRole, New.Data$MonthlyRate, New.Data$DistanceFromHome)
+head(Small.Data)
+names <- c( "Attrition", "Age", "Gender", "Marital.Status", "Years.Served", "Education", "Title", "Monthly.Income", "mlg.Home")
+Small.Data <- setNames (Small.Data, names)
+head(Small.Data)
+dim(Small.Data)
+summary(Small.Data)
+plot(Small.Data$Gender, Small.Data$Attrition)
+```
