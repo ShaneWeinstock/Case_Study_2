@@ -6,24 +6,59 @@ output:
   html_document:
     keep_md: yes
 ---
+```{r, echo=TRUE, cache=TRUE}
+sessionInfo()
+```
 
 ```{r, echo=TRUE, cache=TRUE}
 install.packages("readxl")
+install.packages("ggplot2")
+
 library(readxl)
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
 Data <- data.frame(New.Data)
-head(Data)  # original import of all data 
+head(Data) # original import of all data 
+dim(Data) # how many rows and columns in the original data set. 
+
+Data
+#Change col names to less than 12 characters in the  dataframe. 
+names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
+
+Data <- setNames(Data, names)
+
+Data  #check new names
+
+#Anyone under 18?
+Over18 <- grep("N", Small.Data$Over18)
+Over18
 
 #Reduce the col in the dataframe.
-Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$MaritalStatus, Data$YearsAtCompany,   Data$Education, Data$JobRole, Data$MonthlyRate, Data$DistanceFromHome)      
+Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
-names <- c( "Attrition", "Age", "Gender", "Marital.Status", "Years.Served", "Education", "Title", "Monthly.Income", "mlg.Home")
+names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
 Small.Data <- setNames (Small.Data, names)
 head(Small.Data)
 
 summary(Small.Data)
 
-plot(Small.Data$Gender, Small.Data$Attrition)
+#Is anyone under 18 participating in the study?
+Over18 <- grep("N", Small.Data$Over18)
+Over18
+# repsonse is 0. So all are considered over 18 by their response. There are 8 people who state they are 18 but we understand this response to be 18, plus a few days or months. Therefore we are leaving them in the study. 
+
+
+
+plot(Small.Data$Gender)
+plot(Small.Data$Attrition)
+
+
+summary(Small.Data$Monthly.Income)
+
+
+library(ggplot2)
+par(las=2)
+Jobs<-ggplot(data=Small.Data, aes(x=Title, y=(Income.mos), fill=Title))  + geom_bar(stat="identity") + xlab("Titles") +  ylab("Monthly Income") + ggtitle("Jobs that Pay") + theme(plot.title = element_text(hjust = 0.5))+ coord_flip()
+Jobs
 ```
