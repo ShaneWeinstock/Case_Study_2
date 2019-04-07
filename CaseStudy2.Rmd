@@ -62,3 +62,49 @@ par(las=2)
 Jobs<-ggplot(data=Small.Data, aes(x=Title, y=(Income.mos), fill=Title))  + geom_bar(stat="identity") + xlab("Titles") +  ylab("Monthly Income") + ggtitle("Jobs that Pay") + theme(plot.title = element_text(hjust = 0.5))+ coord_flip()
 Jobs
 ```
+
+```{r, echo=TRUE, cache=TRUE}
+#Using only the data where Attrition is True. 
+
+setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
+
+New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
+
+Data <- data.frame(New.Data)
+
+names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
+
+Data <- setNames(Data, names)
+
+Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+
+#Change col names in the smaller dataframe. 
+names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
+Small.Data <- setNames (Small.Data, names)
+
+library(plyr)
+Small.Data$Attrition <- revalue(Small.Data$Attrition, c("Yes"=1, "No" = 0))
+Small.Data$Attrition
+True.Attrition<- Small.Data[which(Small.Data$Attrition==1),]
+True.Attrition
+summary(True.Attrition)
+
+hist(True.Attrition$mlg.Home, 
+     main="Miles from Home Impacting Attrition", 
+     xlab="Miles from Home",
+     ylab="Number of People ", 
+     border="blue", 
+     col="green")
+#The distance from home appears to impact attrition. There is right skew to the data. Indicating those living
+#close to their place of employement will attrition out of the company.
+
+hist(True.Attrition$Age,
+     main="Age of people Impacting Attrition", 
+     xlab="Age of people",
+     ylab="Number of people",
+     border = "blue",
+     col="yellow")
+#The Age shows a right skew with the older the age the less likely to leave a company.
+
+
+```
