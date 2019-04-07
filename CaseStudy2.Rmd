@@ -1,6 +1,6 @@
 ---
 title: "CaseStudy2"
-author: "Kari Theobald"
+author: "Kari Theobald, Shane Weinstock, Jeremey Simpson, Gabe Gonzales"
 date: "4/3/2019"
 output:
   html_document:
@@ -10,7 +10,7 @@ output:
 sessionInfo()
 ```
 
-```{r, echo=TRUE, cache=TRUE}
+```{r, echo=TRUE, cache=TRUE, include = TRUE}
 install.packages("readxl")
 install.packages("ggplot2")
 
@@ -57,14 +57,14 @@ plot(Small.Data$Attrition)
 
 summary(Small.Data$Monthly.Income)
 
-
+### don't use this below.. this charge totals all the monthly income per category. We need to average the income and then plot.
 library(ggplot2)
 par(las=2)
-Jobs<-ggplot(data=Small.Data, aes(x=Title, y=(Income.mos), fill=Title))  + geom_bar(stat="identity") + xlab("Titles") +  ylab("Monthly Income") + ggtitle("Jobs that Pay") + theme(plot.title = element_text(hjust = 0.5))+ coord_flip()
+Jobs<-ggplot(data=Small.Data, aes(x=Title, y=Income.mos, fill=Title))  + geom_bar(stat="identity") + xlab("Titles") +  ylab("Monthly Income") + ggtitle("Jobs that Pay") + theme(plot.title = element_text(hjust = 0.5))+ coord_flip()
 Jobs
 ```
 
-```{r, echo=TRUE, cache=TRUE}
+```{r, echo=TRUE, cache=TRUE, include=TRUE}
 #Using only the data where Attrition is True. 
 
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
@@ -86,7 +86,7 @@ Small.Data <- setNames (Small.Data, names)
 library(plyr)
 Small.Data$Attrition <- revalue(Small.Data$Attrition, c("Yes"=1, "No" = 0))
 Small.Data$Attrition
-True.Attrition<- Small.Data[which(Small.Data$Attrition==1),]
+True.Attrition<- subset(Small.Data, Small.Data$Attrition==1)
 True.Attrition
 summary(True.Attrition)
 
@@ -100,12 +100,53 @@ hist(True.Attrition$mlg.Home,
 #close to their place of employement will attrition out of the company.
 
 hist(True.Attrition$Age,
-     main="Age of people Impacting Attrition", 
-     xlab="Age of people",
-     ylab="Number of people",
+     main="Age of Employees Impacting Attrition", 
+     xlab="Employees Age",
+     ylab="Number of Employees",
      border = "blue",
      col="yellow")
 #The Age shows a right skew with the older the age the less likely to leave a company.
 
 summary(True.Attrition$Title)
+```
+#Is there a relationship between age and income, color each point based off of gender? 
+# Yes there is a positive relationship betwen age and income. The older individuals tend to make higher monthly income than yougner individuals. 
+
+```{r, echo=TRUE, cache=TRUE, include=TRUE}
+library(ggplot2)
+par(las=2)
+
+Age2Income<-ggplot(Small.Data, aes(x=Age, y=Income.mos)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", color= "black") + xlab("Age of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
+Age2Income
+
+```
+
+#What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations)
+
+```{r, echo=TRUE, cache=TRUE, include=TRUE}
+library(ggplot2)
+par(las=2)
+
+LifeSat2Home<-ggplot(Data, aes(x=mlg.Home, y=Satisfied)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, color= "black") + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Satisfied Life by Distance to Home") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+LifeSat2Home
+
+
+library(plyr)
+DSJob <- subset(Data, Title=="Research Scientist")
+
+
+DS.Satisfied<-ggplot(DSJob, aes(x=Age, y=Satisfied)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", color= "black") + xlab("Age of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
+DS.Satisfied
+
+DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", color= "black") + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
+DS.Alter
+```
+
+```{r, echo=TRUE, cache=TRUE, include=TRUE}
+
+### testing fit lines outside of ggplot
+#fit1 <- lm(Age ~ Income.mos, data=Small.Data)
+#summary(fit1)
+#test <- plot(Age ~ Income.mos, data=Small.Data)
+#test + abline(fit1)
 ```
