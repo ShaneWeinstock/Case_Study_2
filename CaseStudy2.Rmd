@@ -28,6 +28,7 @@ names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.H
 Data <- setNames(Data, names)
 
 Data  #check new names
+summary(Data)
 
 #Anyone under 18?
 Over18 <- grep("N", Small.Data$Over18)
@@ -106,5 +107,5 @@ hist(True.Attrition$Age,
      col="yellow")
 #The Age shows a right skew with the older the age the less likely to leave a company.
 
-
+summary(True.Attrition$Title)
 ```
