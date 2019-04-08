@@ -11,30 +11,31 @@ sessionInfo()
 ```
 
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
-install.packages("readxl")
-install.packages("ggplot2")
+#install.packages("readxl")
+#install.packages("ggplot2")
 
 library(readxl)
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
+
+# 2.a ) Read the CSV file (we have xlsx) into the dataset. Output how many rows and columns 
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
 Data <- data.frame(New.Data)
 head(Data) # original import of all data 
 dim(Data) # how many rows and columns in the original data set. 
 
-Data
-#Change col names to less than 12 characters in the  dataframe. 
+# 2.b ) Change col names to less than 12 characters in the  dataframe. 
 names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
 
 Data <- setNames(Data, names)
 
-Data  #check new names
+head(Data)  #check new names
 summary(Data)
 
-#Anyone under 18?
-Over18 <- grep("N", Small.Data$Over18)
-Over18
+lapply(Data, class) # review the class of the variables in the dataframe.
+# Results indicate we are operating with character and numberic classes. 
 
-#Reduce the col in the dataframe.
+# Tidy the data to managable dataframe. 
+# Reduce the number of col in the dataframe and call it Small.Data
 Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
@@ -42,26 +43,38 @@ names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", 
 Small.Data <- setNames (Small.Data, names)
 head(Small.Data)
 
-summary(Small.Data)
 
-#Is anyone under 18 participating in the study?
+# 3.a )   Is anyone under 18 participating in the study?
 Over18 <- grep("N", Small.Data$Over18)
 Over18
-# repsonse is 0. So all are considered over 18 by their response. There are 8 people who state they are 18 but we understand this response to be 18, plus a few days or months. Therefore we are leaving them in the study. 
+# Repsonse is 0. So all are considered over 18 by their response. There are 8 people who state they are 18 but we understand this response to be 18, plus a few days or months. Therefore we are leaving them in the study. 
+
+# 3.b)  Provide descriptive Statistics on 7 variables.
+summary(Small.Data)
+
+# 3.c)  Provide a histogram for 2 of the variables. 
+plot(Small.Data$Gender,  xlab = "Gender",   ylab= "Employees",  main="Men vs Women Ratio in Data Reviewed", col=c("Yellow", "Blue"))
+plot(Small.Data$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",  main="Attrition considered in the Data Reviewed", col= c("Red", "Green"))
+
+# 3.d) Give Frequency for Gender, Education  and Occupation.
+summary(Small.Data$Gender)
+# Result : Female   Male 
+#           588    882 
+summary(Small.Data$Education)
+# Result :  Human Resources    Life Sciences        Marketing          Medical            Other Technical Degree 
+#              27              606                       159              464               82              132 
+summary(Small.Data$Title)
+# Result : Number of managment positions (Mfg and Research Directors, Sales Exec and Managers)
+#          Total (145 + 80 + 326 + 102) = 653
+#Healthcare Representative           Human Resources     Laboratory Technician                   Manager 
+#                      131                        52                       259                       102 
+#   Manufacturing Director         Research Director        Research Scientist           Sales Executive 
+#                      145                        80                       292                       326 
+#     Sales Representative 
+#                       83 
+#
 
 
-
-plot(Small.Data$Gender)
-plot(Small.Data$Attrition)
-
-
-summary(Small.Data$Monthly.Income)
-
-### don't use this below.. this charge totals all the monthly income per category. We need to average the income and then plot.
-library(ggplot2)
-par(las=2)
-Jobs<-ggplot(data=Small.Data, aes(x=Title, y=Income.mos, fill=Title))  + geom_bar(stat="identity") + xlab("Titles") +  ylab("Monthly Income") + ggtitle("Jobs that Pay") + theme(plot.title = element_text(hjust = 0.5))+ coord_flip()
-Jobs
 ```
 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
@@ -85,15 +98,16 @@ Small.Data <- setNames (Small.Data, names)
 
 library(plyr)
 Small.Data$Attrition <- revalue(Small.Data$Attrition, c("Yes"=1, "No" = 0))
-Small.Data$Attrition
+head(Small.Data$Attrition)
 True.Attrition<- subset(Small.Data, Small.Data$Attrition==1)
-True.Attrition
+head(True.Attrition)
 summary(True.Attrition)
+#Years of Service is minium 0. The employee has checked this to indicate they have worked less than 1 year. 
 
 hist(True.Attrition$mlg.Home, 
      main="Miles from Home Impacting Attrition", 
      xlab="Miles from Home",
-     ylab="Number of People ", 
+     ylab="Number of Employees ", 
      border="blue", 
      col="green")
 #The distance from home appears to impact attrition. There is right skew to the data. Indicating those living
@@ -101,7 +115,7 @@ hist(True.Attrition$mlg.Home,
 
 hist(True.Attrition$Age,
      main="Age of Employees Impacting Attrition", 
-     xlab="Employees Age",
+     xlab="Employees Age (years)",
      ylab="Number of Employees",
      border = "blue",
      col="yellow")
@@ -109,44 +123,60 @@ hist(True.Attrition$Age,
 
 summary(True.Attrition$Title)
 ```
-#Is there a relationship between age and income, color each point based off of gender? 
-# Yes there is a positive relationship betwen age and income. The older individuals tend to make higher monthly income than yougner individuals. 
+# 4.c   Is there a relationship between age and income, color each point based off of gender? 
+# Yes there is a positive relationship betwen age and income. Older employees tend to make higher monthly income than younger employees. 
 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
 library(ggplot2)
 par(las=2)
 
-Age2Income<-ggplot(Small.Data, aes(x=Age, y=Income.mos)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", color= "black") + xlab("Age of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
+Age2Income<-ggplot(Small.Data, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
 Age2Income
 
 ```
 
 #What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations)
+#In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
 library(ggplot2)
 par(las=2)
 
-LifeSat2Home<-ggplot(Data, aes(x=mlg.Home, y=Satisfied)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, color= "black") + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Satisfied Life by Distance to Home") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+LifeSat2Home<-ggplot(Data, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Satisfied Life by Distance to Home") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 LifeSat2Home
 
 
 library(plyr)
 DSJob <- subset(Data, Title=="Research Scientist")
 
-
-DS.Satisfied<-ggplot(DSJob, aes(x=Age, y=Satisfied)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", color= "black") + xlab("Age of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
+#### Below we are testing  how Research Scientist relate in the data tested. ###
+# Comepare Age to Job satisfaction for men and women.
+DS.Satisfied<-ggplot(DSJob, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Age (years) of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
 DS.Satisfied
 
-DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", color= "black") + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
+# Compare Marital Status to Job Satisfaction for men and women. 
+DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Alter
+
+# Compare Years between Promotions to Job Satisfaction for men and women. 
+DS.Promo <- ggplot(DSJob, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Satisfied in Job") +  ylab("Years between Promotions") + ggtitle("Years between Promotions compared to Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+DS.Promo
+
+# Compare income compared to job satisfaction (male vs female). We see that men are paid more overall. The more men are paid the less satisfied they are with work. The more women are paid the more satisfied they are with working. 
+
+DS.Income <- ggplot(DSJob, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Monthly Income") +  ylab("Satisfied in their Job") + ggtitle("Income as a Research Scientist compaired to Satisfied Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+DS.Income
+
 ```
 
+#4.d  Looking only at life satisfaction data only. With Life Satisfaction overall at its maximum. 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
+library(ggplot2)
+par(las=2)
 
-### testing fit lines outside of ggplot
-#fit1 <- lm(Age ~ Income.mos, data=Small.Data)
-#summary(fit1)
-#test <- plot(Age ~ Income.mos, data=Small.Data)
-#test + abline(fit1)
+Turnover <-  ggplot(Data, aes(x=Jobs.Worked, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") +  ylab("Satisfied in their Job") + ggtitle("Number of Jobs worked compaired to Satisfied Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+Turnover
+
+#This indicates women are happier when they start in the work force. Women who frequently change employment demonstrate they have #a less satified work experience. Men however can change the jobs equal to women and maintain the same satisfaction as they did #when they took their 1st job.  There is no impact on men in being satisified with work compared to the number of times men change #employment. Overall women and men share equal satisfaction working when they have changed employer less than 2.5 times.  
+
 ```
