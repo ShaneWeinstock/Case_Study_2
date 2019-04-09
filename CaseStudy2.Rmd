@@ -155,7 +155,7 @@ DS.Satisfied<-ggplot(DSJob, aes(x=Age, y=Satisfied, group=Gender, color=Gender))
 DS.Satisfied
 
 # Compare Marital Status to Job Satisfaction for men and women. 
-DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("Married, Single and Divorced Research Scientist, Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Alter
 
 # Compare Years between Promotions to Job Satisfaction for men and women. 
