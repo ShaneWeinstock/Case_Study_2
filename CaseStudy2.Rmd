@@ -35,38 +35,38 @@ lapply(Data, class) # review the class of the variables in the dataframe.
 # Results indicate we are operating with character and numberic classes. 
 
 # Tidy the data to managable dataframe. 
-# Reduce the number of col in the dataframe and call it Small.Data
-Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+# Reduce the number of col in the dataframe and call the new dataframe Small.
+Small<- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
-Small.Data <- setNames (Small.Data, names)
-head(Small.Data)
+Small <- setNames (Small, names)
+head(Small)
 
 
 # 3.a )   Is anyone under 18 participating in the study?
-Over18 <- grep("N", Small.Data$Over18)
+Over18 <- grep("N", Small$Over18)
 Over18
 # Repsonse is 0. So all are considered over 18 by their response. There are 8 people who state they are 18 but we understand this response to be 18, plus a few days or months. Therefore we are leaving them in the study. 
 
 # 3.b)  Provide descriptive Statistics on 7 variables.
-summary(Small.Data)
+summary(Small)
 
 # 3.c)  Provide a histogram for 2 of the variables. 
 # Plot Gender vs Number of Employees
-plot(Small.Data$Gender,  xlab = "Gender",   ylab= "Employees",  main="Men vs Women Ratio in Data Reviewed", ylim=c(0,1000), col=c("Yellow", "Blue"))
+plot(Small$Gender,  xlab = "Gender",   ylab= "Employees",  main="Men vs Women Ratio in Data Reviewed", ylim=c(0,1000), col=c("Yellow", "Blue"))
 
 #Plot Number of Employee Attrition vs Total Number of Employees.
-plot(Small.Data$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",  main="Attrition considered in the Data Reviewed", col= c("Red", "Green"))
+plot(Small$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",  main="Attrition considered in the Data Reviewed", col= c("Red", "Green"))
 
 # 3.d) Give Frequency for Gender, Education  and Occupation.
-summary(Small.Data$Gender)
+summary(Small$Gender)
 # Result : Female   Male 
 #           588    882 
-summary(Small.Data$Education)
+summary(Small$Education)
 # Result :  Human Resources    Life Sciences        Marketing          Medical            Other Technical Degree 
 #              27              606                       159              464               82              132 
-summary(Small.Data$Title)
+summary(Small$Title)
 # Result : Number of managment positions (Mfg and Research Directors, Sales Exec and Managers)
 #          Total (145 + 80 + 326 + 102) = 653
 #Healthcare Representative           Human Resources     Laboratory Technician                   Manager 
@@ -93,19 +93,19 @@ names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.H
 
 Data <- setNames(Data, names)
 
-Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
-Small.Data <- setNames (Small.Data, names)
+Small <- setNames (Small, names)
 
 library(plyr)
-Small.Data$Attrition <- revalue(Small.Data$Attrition, c("Yes"=1, "No" = 0))
-head(Small.Data$Attrition)
-True.Attrition<- subset(Small.Data, Small.Data$Attrition==1)
+Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0))
+head(Small$Attrition)
+True.Attrition<- subset(Small, Small$Attrition==1)
 head(True.Attrition)
 summary(True.Attrition)
-#Years of Service is minium 0. The employee has checked this to indicate they have worked less than 1 year. 
+#Years of Service is minimum 0. The employee has checked this to indicate they have worked less than 1 year. 
 
 hist(True.Attrition$mlg.Home, 
      main="Miles from Home Impacting Attrition", 
@@ -126,6 +126,8 @@ hist(True.Attrition$Age,
 
 summary(True.Attrition$Title)
 ```
+
+
 # 4.c   Is there a relationship between age and income, color each point based off of gender? 
 # Yes there is a positive relationship betwen age and income. Older employees tend to make higher monthly income than younger employees. 
 
@@ -133,12 +135,84 @@ summary(True.Attrition$Title)
 library(ggplot2)
 par(las=2)
 
-Age2Income<-ggplot(Small.Data, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
+Age2Income<-ggplot(Small, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
 Age2Income
 
 ```
 
-#What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations)
+```{r echo=TRUE, cache=TRUE, include=TRUE}
+
+# Original Linear Regression to discover correlation between Age and Income
+ageincome.lm <- lm(Income.mos ~ Age, data = Small)
+ageincome.res <- resid(ageincome.lm)
+summary(ageincome.lm)
+
+# Simple Regression Model
+plot(ageincome.lm)
+
+plot(x = Small$Age, y = Small$Income.mos, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
+displayDF <- data.frame(Small)
+
+# Regression Model
+## Add the regression line to the existing scatterplot
+abline(ageincome.lm, col = "red")
+## Create "new" data to make confidence and prediction intervals
+newx <- displayDF$Age
+newx <- sort(newx)
+## Confidence Interal
+conf <- predict(ageincome.lm, newdata = data.frame(Age = newx), interval = c("confidence"), 
+                type = c("response"), level = .95)
+## Prediction Interval
+pred <- predict(ageincome.lm, newdata = data.frame(Age = newx), interval = c("predict"), 
+                type = c("response"), level = .95)
+## Add prediction and confidence intervals to the scatterplot
+lines(newx, conf[,2], col = "blue", lty = 2, lwd = 2)
+lines(newx, conf[,3], col = "blue", lty = 2, lwd = 2)
+lines(newx, pred[,2], col = "green", lty = 2, lwd = 2)
+lines(newx, pred[,3], col = "green", lty = 2, lwd = 2)
+
+## Residual Plot
+plot(Small$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
+abline(0,0)
+
+# Requires Transformation - log or log/log
+Small$logAge <- log(Small$Age)
+Small$logIncome <- log(Small$Income.mos)
+# Checking to see if Log Income
+logageincome.lm <- lm(logIncome ~ Age, data = Small)
+logageincome.res <- resid(logageincome.lm)
+summary(logageincome.lm)
+
+logageincome2.lm <- lm(logIncome ~ logAge, data = Small)
+summary(logageincome2.lm)
+
+########### do we need this??  #####
+# Regression Model
+plot(x = Autism$Year, y = Autism$rootPrevalence, xlim = c(1990,2002), ylim =c(-6,15), xlab = "Year", ylab = "SQRT(Prevalence)", main = "Autism Prevalence vs. Year")
+displayDF <- data.frame(Autism)
+## Add the regression line to the existing scatterplot
+abline(Autism.lm, col = "red")
+## Create "new" data to make confidence and prediction intervals
+newx <- displayDF$Year
+newx <- sort(newx)
+## Confidence Interal
+conf <- predict(Autism.lm, newdata = data.frame(Year = newx), interval = c("confidence"), 
+                type = c("response"), level = .95)
+## Prediction Interval
+pred <- predict(Autism.lm, newdata = data.frame(Year = newx), interval = c("predict"), 
+                type = c("response"), level = .95)
+## Add prediction and confidence intervals to the scatterplot
+lines(newx, conf[,2], col = "blue", lty = 2, lwd = 2)
+lines(newx, conf[,3], col = "blue", lty = 2, lwd = 2)
+lines(newx, pred[,2], col = "green", lty = 2, lwd = 2)
+lines(newx, pred[,3], col = "green", lty = 2, lwd = 2)
+########### the end of whatever this is ?? ########
+```
+
+### With an extremely low R-Squared and no transformation narrowing our results for comparison, it is safe to say that there is not a correlation between Age and Income across this many variables. This would likely change given we select a smaller data set or a particular job, there is simply too much variation across all 1,400 data points.
+
+
+# 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations)
 #In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
@@ -172,14 +246,13 @@ DS.Income
 
 ```
 
-#4.d  Looking only at life satisfaction data only. With Life Satisfaction overall at its maximum. 
+# 4.d  Looking only at life satisfaction data only. With Life Satisfaction overall at its maximum. 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
 library(ggplot2)
 par(las=2)
 
 Turnover <-  ggplot(Data, aes(x=Jobs.Worked, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") +  ylab("Satisfied in their Job") + ggtitle("Number of Jobs worked compaired to Satisfied Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 Turnover
-
-#This indicates women are happier when they start in the work force. Women who frequently change employment demonstrate they have #a less satified work experience. Men however can change the jobs equal to women and maintain the same satisfaction as they did #when they took their 1st job.  There is no impact on men in being satisified with work compared to the number of times men change #employment. Overall women and men share equal satisfaction working when they have changed employer less than 2.5 times.  
-
 ```
+# Results indicate women are happier when they start in the workforce. Women who frequently change employment demonstrate they #have a less satified work experience. Men however can change the jobs equal to women and maintain the same satisfaction as they #did when they took their 1st job.  There is no impact on men in being satisified with work compared to the number of times men #change #employment. Overall women and men share equal satisfaction working when they have changed employer less than 2.5 times.  
+
