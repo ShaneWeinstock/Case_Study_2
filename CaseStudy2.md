@@ -1,6 +1,6 @@
 ---
 title: "CaseStudy2"
-author: "Kari Theobald, Shane Weinstock, Jeremey Simpson, Gabe Gonzales"
+author: "Kari Theobald, Shane Weinstock, Jeremy Simpson, Gabe Gonzales"
 date: "4/3/2019"
 output:
   html_document:
