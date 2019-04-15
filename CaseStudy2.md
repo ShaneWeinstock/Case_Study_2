@@ -5,43 +5,32 @@ date: "4/3/2019"
 output:
   html_document:
     keep_md: yes
+  word_document: default
+  pdf_document: default
 ---
+# EXECUTIVE SUMMARY
+DDSAnalytics provided employee profiles on the current workforce of ChemicalRepo. In this dataset we were requested to review for the 3 contributing reasons of attrition in the ChemicalRepo. As Data Scientist, we there is a request from DDSAnalytics management to determine other interesting facts within this data on ChemicalRepo. We conclude the contributing factors for attrition is age of employment and those within the sales representative department. We recommend to either reduce the sales team to those below the age of 25 or increase it beyond 35 years of age. We also recommend on hiring to not hold back from higher employees with at least 8 jobs before they are 45. We conclude this is normal and not can be contributed to jobs held while in high school and college. Overall there is a larger section of men holding employment at ChemicalRepo by 60% of the workforce. We also determine those who live greater than 10 miles from their work are less likely to attrition. In conclusion ChemicalRepo could increase the number of females in their workforce, increase the hiring age beyond 35 years old for new employees and look for employees with a commute greater than 10 miles from the office.  Based off the information given, attrition will with reduce by concentration in this area of adjustments.
 
-```r
-sessionInfo()
-```
+# HYPOTHESIS
+We hypothesize, the sales departments, age and overall commute distance contributes to attrition within a company. 
 
-```
-## R version 3.5.1 (2018-07-02)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS Sierra 10.12.6
-## 
-## Matrix products: default
-## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
-## 
-## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-## 
-## attached base packages:
-## [1] stats     graphics  grDevices utils     datasets  methods   base     
-## 
-## loaded via a namespace (and not attached):
-##  [1] compiler_3.5.1  magrittr_1.5    tools_3.5.1     htmltools_0.3.6
-##  [5] yaml_2.2.0      Rcpp_1.0.0      stringi_1.2.4   rmarkdown_1.11 
-##  [9] knitr_1.21      stringr_1.3.1   xfun_0.4        digest_0.6.18  
-## [13] evaluate_0.12
-```
+# INTRODUCTION
+DDSAnalytics a Fortune 1000 Company, is requesting their Data Scientist to review the data on ChemicalRepo. The management  at DDSAnalytics instructs to the Data Scientist, all results from the data must carry the exclusion of all employees under the age of 18. DDSAnalytics also request three factors associated to attrition in ChemicalRepo.  DDSAnalytics would like to suggest to ChemicalRepo workforce planning and identify high-potential employees who attribute to turnover. The management in DDSAnalytics will be using this data research as leverage in their talent management business. The Data Scientist will meet the request of reviewing attrition, they will also examine specific job role trends and report the findings. 
+
 
 
 ```r
 #install.packages("readxl")
 #install.packages("ggplot2")
-
+#Establish the working directory.
 library(readxl)
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
+```
 
-# 2.a ) Read the CSV file (we have xlsx) into the dataset. Output how many rows and columns 
+### 2.a ) Read the CSV file (we have xlsx) into the dataset call it Data. Output how many rows and columns 
+
+
+```r
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
 ```
 
@@ -131,8 +120,9 @@ dim(Data) # how many rows and columns in the original data set.
 ## [1] 1470   35
 ```
 
+### 2.b ) Change col names to less than 12 characters in the  dataframe.
+
 ```r
-# 2.b ) Change col names to less than 12 characters in the  dataframe. 
 names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
 
 Data <- setNames(Data, names)
@@ -367,50 +357,52 @@ lapply(Data, class) # review the class of the variables in the dataframe.
 ```
 
 ```r
-# Results indicate we are operating with character and numberic classes. 
+# Results indicate we are operating with character and numeric classes. 
 
-# Tidy the data to managable dataframe. 
-# Reduce the number of col in the dataframe and call it Small.Data
-Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+# Tidy the data to manageable dataframe. 
+# Reduce the number of col in the dataframe and call the new dataframe Small.
+Small<- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS, Data$Education,  Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
-names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
-Small.Data <- setNames (Small.Data, names)
-head(Small.Data)
+names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Ed.Lvl", "Education", "Title", "Income.mos", "mlg.Home")
+Small <- setNames (Small, names)
+head(Small)
 ```
 
 ```
-##   Attrition Age Gender   M.S.D YOS     Education                 Title
-## 1       Yes  41 Female  Single   6 Life Sciences       Sales Executive
-## 2        No  49   Male Married  10 Life Sciences    Research Scientist
-## 3       Yes  37   Male  Single   0         Other Laboratory Technician
-## 4        No  33 Female Married   8 Life Sciences    Research Scientist
-## 5        No  27   Male Married   2       Medical Laboratory Technician
-## 6        No  32   Male  Single   7 Life Sciences Laboratory Technician
-##   Income.mos mlg.Home
-## 1      19479        1
-## 2      24907        8
-## 3       2396        2
-## 4      23159        3
-## 5      16632        2
-## 6      11864        2
+##   Attrition Age Gender   M.S.D YOS Ed.Lvl     Education
+## 1       Yes  41 Female  Single   6      2 Life Sciences
+## 2        No  49   Male Married  10      1 Life Sciences
+## 3       Yes  37   Male  Single   0      2         Other
+## 4        No  33 Female Married   8      4 Life Sciences
+## 5        No  27   Male Married   2      1       Medical
+## 6        No  32   Male  Single   7      2 Life Sciences
+##                   Title Income.mos mlg.Home
+## 1       Sales Executive      19479        1
+## 2    Research Scientist      24907        8
+## 3 Laboratory Technician       2396        2
+## 4    Research Scientist      23159        3
+## 5 Laboratory Technician      16632        2
+## 6 Laboratory Technician      11864        2
 ```
+
+### 3.a )   Is anyone under 18 participating in the study?
 
 ```r
-# 3.a )   Is anyone under 18 participating in the study?
-Over18 <- grep("N", Small.Data$Over18)
+Over18 <- grep("N", Small$Over18)
 Over18
 ```
 
 ```
 ## integer(0)
 ```
+Response is 0. So, all are considered over 18 by their response. There are 8 people who state they are 18 but we understand this response to be 18, plus a few days or months. There is no exclusion of data because of age in the study. 
+
+
+### 3.b)  Provide descriptive Statistics on at least 7 variables.
 
 ```r
-# Repsonse is 0. So all are considered over 18 by their response. There are 8 people who state they are 18 but we understand this response to be 18, plus a few days or months. Therefore we are leaving them in the study. 
-
-# 3.b)  Provide descriptive Statistics on 7 variables.
-summary(Small.Data)
+summary(Small)
 ```
 
 ```
@@ -440,22 +432,27 @@ summary(Small.Data)
 ## 
 ```
 
+### 3.c)  Provide a histogram for 2 of the variables. 
+
 ```r
-# 3.c)  Provide a histogram for 2 of the variables. 
-plot(Small.Data$Gender,  xlab = "Gender",   ylab= "Employees",  main="Men vs Women Ratio in Data Reviewed", col=c("Yellow", "Blue"))
+# Plot Gender vs Number of Employees
+plot(Small$Gender,  xlab = "Gender",   ylab= "Employees",  main="Men vs Women Ratio in Data Reviewed", ylim=c(0,1000), col=c("Yellow", "Blue"))
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
 ```r
-plot(Small.Data$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",  main="Attrition considered in the Data Reviewed", col= c("Red", "Green"))
+#Plot Number of Employee Attrition vs Total Number of Employees.
+plot(Small$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",  main="Attrition considered in the Data Reviewed", col= c("Red", "Green"))
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-2-2.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-6-2.png)<!-- -->
+
+
+# 3.d) Give Frequency for Gender, Education  and Occupation. How many are in management positions? 
 
 ```r
-# 3.d) Give Frequency for Gender, Education  and Occupation.
-summary(Small.Data$Gender)
+summary(Small$Gender)  #Gender Summary Statistics.
 ```
 
 ```
@@ -466,7 +463,7 @@ summary(Small.Data$Gender)
 ```r
 # Result : Female   Male 
 #           588    882 
-summary(Small.Data$Education)
+summary(Small$Education)  #Education Field Summary Statistics.
 ```
 
 ```
@@ -479,7 +476,23 @@ summary(Small.Data$Education)
 ```r
 # Result :  Human Resources    Life Sciences        Marketing          Medical            Other Technical Degree 
 #              27              606                       159              464               82              132 
-summary(Small.Data$Title)
+summary(Small$Ed.Lvl)  #Education Level Summary Statistics.
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   1.000   2.000   3.000   2.913   4.000   5.000
+```
+
+```r
+# Education
+# 1 'Below College'
+#	2 'College'
+#	3 'Bachelor'
+#	4 'Master'
+#	5 'Doctor'
+
+summary(Small$Title)  #Department titles and summary statistics.
 ```
 
 ```
@@ -496,8 +509,6 @@ summary(Small.Data$Title)
 ```
 
 ```r
-# Result : Number of managment positions (Mfg and Research Directors, Sales Exec and Managers)
-#          Total (145 + 80 + 326 + 102) = 653
 #Healthcare Representative           Human Resources     Laboratory Technician                   Manager 
 #                      131                        52                       259                       102 
 #   Manufacturing Director         Research Director        Research Scientist           Sales Executive 
@@ -506,39 +517,30 @@ summary(Small.Data$Title)
 #                       83 
 #
 ```
+Result : Number of management positions (Mfg and Research Directors, Sales Exec and Managers)
+         Total (145 + 80 + 326 + 102) = 653
 
+###Using only the data where Attrition is True. 
 
 ```r
-#Using only the data where Attrition is True. 
-
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
-
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
-```
 
-```
-## readxl works best with a newer version of the tibble package.
-## You currently have tibble v1.4.2.
-## Falling back to column name repair from tibble <= v1.4.2.
-## Message displays once per session.
-```
-
-```r
 Data <- data.frame(New.Data)
 
 names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
 
 Data <- setNames(Data, names)
 
-Small.Data <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
-Small.Data <- setNames (Small.Data, names)
+Small <- setNames (Small, names)
 
 library(plyr)
-Small.Data$Attrition <- revalue(Small.Data$Attrition, c("Yes"=1, "No" = 0))
-head(Small.Data$Attrition)
+Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0)) # DF Small, change in the Attrition column all Yes answers to 1 and all No answers to 0.
+head(Small$Attrition) # show the dataframe Small was revalued with 1's and 0's in the Attrition column. 
 ```
 
 ```
@@ -547,8 +549,8 @@ head(Small.Data$Attrition)
 ```
 
 ```r
-True.Attrition<- subset(Small.Data, Small.Data$Attrition==1)
-head(True.Attrition)
+True.Attrition<- subset(Small, Small$Attrition==1)  #create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1.
+head(True.Attrition)  #show only the variables names the dataframe True.Attrition.
 ```
 
 ```
@@ -569,7 +571,7 @@ head(True.Attrition)
 ```
 
 ```r
-summary(True.Attrition)
+summary(True.Attrition) #summary statistics on variables impacted by attrition. 
 ```
 
 ```
@@ -598,10 +600,12 @@ summary(True.Attrition)
 ##  Max.   :29.00  
 ## 
 ```
+When Years of Service is 0, the employee is indicating they have worked less than 1 year.
+
+
+### Graph a histogram of Attrition  employees compared to commute distance. 
 
 ```r
-#Years of Service is minium 0. The employee has checked this to indicate they have worked less than 1 year. 
-
 hist(True.Attrition$mlg.Home, 
      main="Miles from Home Impacting Attrition", 
      xlab="Miles from Home",
@@ -610,12 +614,13 @@ hist(True.Attrition$mlg.Home,
      col="green")
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+
+Results conclude distance from home appears to impact attrition. There is right skew to the data. Indicating those living close to their place of employment will attrition out of the company.
+
+### Graph a histogram of Attrition employees compared to age of employee. 
 
 ```r
-#The distance from home appears to impact attrition. There is right skew to the data. Indicating those living
-#close to their place of employement will attrition out of the company.
-
 hist(True.Attrition$Age,
      main="Age of Employees Impacting Attrition", 
      xlab="Employees Age (years)",
@@ -624,92 +629,336 @@ hist(True.Attrition$Age,
      col="yellow")
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-3-2.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+
+The graphical results show a right skew. The older the age of the employee, it is less likely for the company to experience attrition. We show a spike of attrition between the age of 25 to 35. Outside of the age bracket the attrition goes down. 
+
+### Other components  impacting attrition. Review Department Titles compared to Gender. 
 
 ```r
-#The Age shows a right skew with the older the age the less likely to leave a company.
+library (ggplot2)
+par(las=1)
+Attrition.Gender <- ggplot(True.Attrition, aes(x=True.Attrition$Gender, y=True.Attrition$Title, fill = True.Attrition$Title)) + geom_bar(stat="identity", position="dodge") + xlab("Gender (Female/Male)") + ylab("Department Titles") + ggtitle("Attrition vs. Department") +   theme(plot.title = element_text(hjust = .5))
 
-summary(True.Attrition$Title)
+Attrition.Gender 
 ```
 
-```
-## Healthcare Representative           Human Resources 
-##                         9                        12 
-##     Laboratory Technician                   Manager 
-##                        62                         5 
-##    Manufacturing Director         Research Director 
-##                        10                         2 
-##        Research Scientist           Sales Executive 
-##                        47                        57 
-##      Sales Representative 
-##                        33
-```
-# 4.c   Is there a relationship between age and income, color each point based off of gender? 
-# Yes there is a positive relationship betwen age and income. Older employees tend to make higher monthly income than younger employees. 
+![](CaseStudy2_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
+Results indicate attrition is dominant in the Sales Executives and Sales Representative field for both men and women. This could largely be due to travel required. 
+
+### Determine what is the age bracket is for each department that is showing attrition.
+
+```r
+par(las=1)
+SalesvsAge <- ggplot(True.Attrition, aes(x=True.Attrition$Age, y=True.Attrition$Title, fill = True.Attrition$Title)) + geom_bar(stat="identity", position="dodge") + xlab("Age (years)") + ylab("Department Titles") + ggtitle("Department Title vs. Age in Attrition") +   theme(plot.title = element_text(hjust = .5))
+
+SalesvsAge
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+Results indicate the sales representative are dominantly 18-40, which coincides with the overall average
+age for attrition which approximately 25-35 year old. We recommend to keep a younger sales team below the ### age of 25 or over the age of 35 to assist in reducing attrition. The workforce does have sales 
+representative over 45 and in their mid 50's and the attrition rate of these age groups is significantly ### less. 
+
+### Other influences on attrition? Does being married, single or divorced have any impact on Sales Representatives. We show married people are less likely to cause attrition than single and divorced employees. What does this company have in attrition and marital status?
+
+```r
+par(las=1)
+SalesvsMSD <- ggplot(True.Attrition, aes(x=True.Attrition$M.S.D, y=True.Attrition$Age, fill = True.Attrition$Title)) + geom_bar(stat="identity", position="dodge") + xlab("Married, Single, Divorced") + ylab("Number of Employees") + ggtitle("Attrition vs. Maritial Status") +   theme(plot.title = element_text(hjust = .5))
+SalesvsMSD
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+Results indicate there is dominating feature in marital status for Sales Representatives in the company. In fact, we have a significant number who are married and with married people showing less probability to attrition we do conclude marital status to be a role in attrition with this company in this department/title.
+
+
+### 4.c   Is there a relationship between age and income, color each point based off of gender? 
 
 ```r
 library(ggplot2)
 par(las=2)
 
-Age2Income<-ggplot(Small.Data, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
+## Overall test of data when comparing women to men in the workforce at ChemicalRepo.
+Age2Income<-ggplot(Small, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
 Age2Income
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
-#What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations)
-#In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
+
+```r
+# Overall test when comparing both men and women in the workforce as one. 
+# Original Linear Regression to discover correlation between Age and Income
+ageincome.lm <- lm(Income.mos ~ Age, data = Small)
+ageincome.res <- resid(ageincome.lm)
+summary(ageincome.lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = Income.mos ~ Age, data = Small)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -12452  -6193    -45   6111  13056 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 13506.10     773.19  17.468   <2e-16 ***
+## Age            21.86      20.33   1.075    0.282    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 7117 on 1468 degrees of freedom
+## Multiple R-squared:  0.0007869,	Adjusted R-squared:  0.0001062 
+## F-statistic: 1.156 on 1 and 1468 DF,  p-value: 0.2825
+```
+
+```r
+# Simple Regression Model
+plot(ageincome.lm)
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-15-1.png)<!-- -->![](CaseStudy2_files/figure-html/unnamed-chunk-15-2.png)<!-- -->![](CaseStudy2_files/figure-html/unnamed-chunk-15-3.png)<!-- -->![](CaseStudy2_files/figure-html/unnamed-chunk-15-4.png)<!-- -->
+
+```r
+plot(x = Small$Age, y = Small$Income.mos, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
+displayDF <- data.frame(Small)
+
+# Regression Model
+## Add the regression line to the existing scatterplot
+abline(ageincome.lm, col = "red")
+## Create "new" data to make confidence and prediction intervals
+newx <- displayDF$Age
+newx <- sort(newx)
+## Confidence Internal
+conf <- predict(ageincome.lm, newdata = data.frame(Age = newx), interval = c("confidence"), 
+                type = c("response"), level = .95)
+## Prediction Interval
+pred <- predict(ageincome.lm, newdata = data.frame(Age = newx), interval = c("predict"), 
+                type = c("response"), level = .95)
+## Add prediction and confidence intervals to the scatterplot
+lines(newx, conf[,2], col = "blue", lty = 2, lwd = 2)
+lines(newx, conf[,3], col = "blue", lty = 2, lwd = 2)
+lines(newx, pred[,2], col = "green", lty = 2, lwd = 2)
+lines(newx, pred[,3], col = "green", lty = 2, lwd = 2)
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-15-5.png)<!-- -->
+
+```r
+## Residual Plot
+plot(Small$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
+abline(0,0)
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-15-6.png)<!-- -->
+
+```r
+# Requires Transformation - log or log/log
+Small$logAge <- log(Small$Age)
+Small$logIncome <- log(Small$Income.mos)
+# Checking to see if Log Income
+logageincome.lm <- lm(logIncome ~ Age, data = Small)
+logageincome.res <- resid(logageincome.lm)
+summary(logageincome.lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = logIncome ~ Age, data = Small)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.7662 -0.3959  0.1635  0.5231  0.8267 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 9.346636   0.068824 135.806   <2e-16 ***
+## Age         0.001508   0.001809   0.834    0.405    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.6335 on 1468 degrees of freedom
+## Multiple R-squared:  0.0004732,	Adjusted R-squared:  -0.0002077 
+## F-statistic: 0.6949 on 1 and 1468 DF,  p-value: 0.4046
+```
+
+```r
+logageincome2.lm <- lm(logIncome ~ logAge, data = Small)
+summary(logageincome2.lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = logIncome ~ logAge, data = Small)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -1.7620 -0.4008  0.1645  0.5225  0.8196 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  9.28922    0.23700  39.196   <2e-16 ***
+## logAge       0.03161    0.06608   0.478    0.632    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.6336 on 1468 degrees of freedom
+## Multiple R-squared:  0.0001559,	Adjusted R-squared:  -0.0005252 
+## F-statistic: 0.2289 on 1 and 1468 DF,  p-value: 0.6324
+```
+
+With an extremely low R-Squared and no transformation narrowing our results for comparison, it is safe to say that there is not a correlation between Age and Income across these many variables. This would likely change given we select a smaller data set or a particular job, there is simply too much variation across all 1,400 data points.
+
+When we review the relationship between age to income in a regression split between men and women there is a small variance. Women have no significant change between age and income while men have a small increase in pay as they become older. Overall the variance is negligible  at Chemicalrepo.
+
+
+### 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
 
 
 ```r
 library(ggplot2)
 par(las=2)
 
-LifeSat2Home<-ggplot(Data, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Satisfied Life by Distance to Home") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+library(plyr)
+DSJob <- subset(Data, Title=="Research Scientist")  #subset out from the large dataframe Data only those who have the title Research Scientist.
+```
+
+### Other comparisons. 
+### Compare Satisfaction in the overall workforce in ChemicalRepo by commute distance. (miles from home).
+### Compare Satisfaction by Research Scientist in ChemicalRepo by their commute.'
+
+
+```r
+# Total Workforce comparison of Satisfaction vs miles from home.
+LifeSat2Home<-ggplot(Data, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Workforce Satisfied Life by Distance to Home") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 LifeSat2Home
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
 ```r
-library(plyr)
-DSJob <- subset(Data, Title=="Research Scientist")
-
-#### Below we are testing  how Research Scientist relate in the data tested. ###
-# Comepare Age to Job satisfaction for men and women.
-DS.Satisfied<-ggplot(DSJob, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Age (years) of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
-DS.Satisfied
+# Research Scientist Satisfied vs miles from home.
+LifeSat2HomeDS<-ggplot(DSJob, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Satisfied Life vs. Distance to Home for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+LifeSat2HomeDS
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-5-2.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-17-2.png)<!-- -->
+
+
+In a scale of 1 to 4 with 4 being Very Highly in satisfaction, we conclude the employees as a whole in ChemicalRepo report a  Medium to High satisfaction with the distance in commute. Men appear to be more satisfied than women in the workforce by their commute distance. When we review Research Scientist, they too have a positive relationship to the company as men are more satisfied than women in how far they commute to work. Interesting factor, both men and women who work as Research Scientist find a higher satisfaction with the company the more miles they drive to work. The longer the Research Scientist commutes the happier they are within the company. 
+
+
+### Compare Satisfaction in the overall workforce in ChemicalRepo by Age of employee.
+### Compare Satisfaction by Research Scientist in ChemicalRepo Age of employee.
 
 ```r
-# Compare Marital Status to Job Satisfaction for men and women. 
+# Total Workforce comparison of Satisfaction vs Age of employee.
+Workforce.Age<-ggplot(Data, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Age (years)") +  ylab("Satisfied in their Job") + ggtitle("Workforce Satisfied Life vs. Age") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+Workforce.Age
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+
+```r
+# Research Scientist Satisfied vs Age of employee.
+DS.Age<-ggplot(DSJob, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Age (years) of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
+DS.Age
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-18-2.png)<!-- -->
+
+
+In a scale of 1 to 4 with 4 being Very Highly in satisfaction, we conclude the employees as a whole in ChemicalRepo with men having a higher job satisfaction the older men become and older women become less satisfied within the company. When reviewing the Research Scientist department, we find a very similar comparison for men and women. Women decline in job satisfaction at ChemicalRepo at an older age. While men increase within a small margin in job satisfaction at an older age in this job title at ChemicalRepo. 
+
+### Compare Satisfaction in the overall workforce in ChemicalRepo by Marital Status.
+### Compare Satisfaction by Research Scientist in ChemicalRepo by Marital Status.
+
+```r
+# Total Workforce comparison of Satisfaction vs Marital Status.
+Workforce.Alter<-ggplot(Data, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("Workforce Satisfied Life vs. Marital Status") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+Workforce.Alter
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+
+```r
+# Research Scientist Satisfied vs Marital Status.
 DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("Married, Single and Divorced Research Scientist, Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Alter
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-5-3.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-19-2.png)<!-- -->
+
+
+In a scale of 1 to 4 with 4 being Very Highly in satisfaction, we conclude the employees as a whole in ChemicalRepo being male, are Medium to Highly satisfied. We conclude women who are divorced are less satisfied as single women. Yet married women are demonstrating the highest satisfaction rating between the 3 types of marital status. Married women are almost Highly satisfied at ChemicalRepo.  When reviewing Research Scientist women are consistent in job satisfaction at a Medium to Highly satisfied ranking. While men who are married are closer to highly satisfied compared to the respectively lower, Single and Divorced Research Scientist. 
+
+### Compare Satisfaction in the overall workforce in ChemicalRepo by Yrs between promotion.
+### Compare Satisfaction by Research Scientist in ChemicalRepo by Yrs between promotion.
 
 ```r
-# Compare Years between Promotions to Job Satisfaction for men and women. 
-DS.Promo <- ggplot(DSJob, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Satisfied in Job") +  ylab("Years between Promotions") + ggtitle("Years between Promotions compared to Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+# Total Workforce comparison of Satisfaction vs Years between Promotions.
+Workforce.Promo<-ggplot(Data, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Years between Promotions") +  ylab("Satisfied in Job") + ggtitle("Workforce Satisfied Life vs. Years between Promotions") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+Workforce.Promo
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
+
+```r
+# Research Scientist Satisfied vs Years between Promotions. 
+DS.Promo <- ggplot(DSJob, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Years between Promotions") +  ylab("Satisfied in Job") + ggtitle("Years between Promotions vs. Satisfaction as a Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Promo
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-5-4.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
+
+
+In a scale of 1 to 4 with 4 being Very Highly in satisfaction, we conclude the employees as a whole in ChemicalRepo are between Medium to Highly Satisfied. Both women and men become slightly less satisfied in their Jobs the longer they wait between promotions. In review of employees titled as Research Scientist, women become less satisfied at a faster rate than men in years between promotions. Women max out at 10 years between promotion but men continue to wait longer as Research Scientist. This could be due to years of service within the company rather than the candidate being ignored for other reasons.
+
+
+### Compare Satisfaction in the overall workforce in ChemicalRepo by Income earned per month.
+### Compare Satisfaction by Research Scientist in ChemicalRepo by Income earned per month.
 
 ```r
-# Compare income compared to job satisfaction (male vs female). We see that men are paid more overall. The more men are paid the less satisfied they are with work. The more women are paid the more satisfied they are with working. 
+# Total Workforce comparison of Satisfaction vs Income per month.
+Workforce.Income<-ggplot(Data, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Income per Month (dollars)") +  ylab("Satisfied in their Job") + ggtitle("Workforce Satisfied Life vs. Income per Month") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+Workforce.Income
+```
 
-DS.Income <- ggplot(DSJob, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Monthly Income") +  ylab("Satisfied in their Job") + ggtitle("Income as a Research Scientist compaired to Satisfied Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+![](CaseStudy2_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+
+```r
+# Compare income compared to job satisfaction (male vs female).
+DS.Income <- ggplot(DSJob, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Monthly Income") +  ylab("Satisfied in their Job") + ggtitle("Income as a Research Scientist vs. Satisfied Job for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Income
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-5-5.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-21-2.png)<!-- -->
 
-#4.d  Looking only at life satisfaction data only. With Life Satisfaction overall at its maximum. 
+
+In a scale of 1 to 4 with 4 being Very Highly in satisfaction, we conclude the employees as a whole in ChemicalRepo are between Medium to Highly Satisfied. While men have a slightly higher approval rating in job satisfaction compared to women, the difference is marginal.  The results indicate as a Research Scientist, men are paid a higher monthly income overall. The more men are paid the less satisfied they are with work. They start with ranking their satisfaction beyond Highly Satisfied but as they increase past $5k a month, men go below the job satisfaction of women. Men who make almost $10k a month rank a Medium Satisfaction with the job.  Which is in reverse to most would consider as a normal response to an increase in pay.  We can contribute this to more demands on the male employees who are making more income. However, the more women are paid the more satisfied they are with working.
+
+### How satisfied are Research Scientist in their job at ChemicalRepo. 
+
+```r
+DS.Attrition <- ggplot(DSJob, aes(x=Attrition, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Attrition") +  ylab("Satisfied in their Job") + ggtitle("Attrition vs. Satisfied Job for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+
+DS.Attrition
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
+
+
+In a scale of 1 to 4 with 4 being Very Highly in satisfaction, we conclude Research Scientist leaving the company are still above medium rankings for being satisfied with their job. Women leaving are slightly less pleased in the job than men. The same is true for those currently working within the company. We find Women are less satisfied in their job as Research Scientist than men. However, they both rank the job satisfaction between a Medium to High satisfaction. 
+
+### 4.d  Looking only at life satisfaction data only for all of the employees in ChemicalRepo. 
 
 ```r
 library(ggplot2)
@@ -719,8 +968,72 @@ Turnover <-  ggplot(Data, aes(x=Jobs.Worked, y=Satisfied, group=Gender, color=Ge
 Turnover
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](CaseStudy2_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
+
+
+
+Results indicate women are happier when they start in the workforce. Women who frequently change
+employment demonstrate they have a less satisfied work experience. Men however can change the jobs equal
+to women and maintain the same satisfaction as they did when they took their 1st job.  There is no impact
+on men in being satisfied with work compared to the number of times men #change #employment. Overall women
+and men share equal satisfaction working when they have changed employer less than 2.5 times. 
+
+### How many former jobs is considered normal in ChemicalRepo?
 
 ```r
-#This indicates women are happier when they start in the work force. Women who frequently change employment demonstrate they have #a less satified work experience. Men however can change the jobs equal to women and maintain the same satisfaction as they did #when they took their 1st job.  There is no impact on men in being satisified with work compared to the number of times men change #employment. Overall women and men share equal satisfaction working when they have changed employer less than 2.5 times.  
+Age.Jobs <-  ggplot(Data, aes(x=Jobs.Worked, y=Age, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") +  ylab("Age") + ggtitle("Number of Jobs worked compaired to Age ") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+
+Age.Jobs
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
+
+
+
+Results also indicate on average both women and men between the approximate age of 33 to 45 change jobs at
+almost the same rate. On average both men and women by the age of 40 have changed jobs almost 5 times.
+When compared to the maximum attrition age between 25-35 we conclude both men and women in their 30's
+could be working at their first job after college. We find the attrition relative to the employee taking
+their first job in the workforce. It is relative to note the number of jobs at a young age could be summer
+high school jobs and as a student working. The stronger age bracket for less attrition are those over 35,
+be aware, those who work between 1 to almost 8 jobs between the age of 33-45 is considered average. There
+is no apparent risk by this age bracket and this many number of jobs worked.
+
+# CONCLUSION
+We hypothesized sales representatives, age and overall commute distance contributes to attrition within a company. We find there is evidence to conclude the sales representatives, age and commute influence attrition. In addition, we find there no guarantee the longer someone works for a company the more income they will earn. The variance of any increase in pay base off of age is negligible compared to years within a company and the multiple departments in ChemicalRepo. Overall our hypothesis did prove to be correct on attrition and our hypothesis is correct. We do add ChemicalRepo could increae the income in Female employees and increase the job satisfaction. We also find commuting distance from work to home is a positive relationship. Those who work farther from home are most satisfied in the job as a Research Scientist. 
+
+
+```r
+sessionInfo()
+```
+
+```
+## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
+## 
+## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] ggplot2_3.1.1 plyr_1.8.4    readxl_1.3.1 
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.0       cellranger_1.1.0 pillar_1.3.1     compiler_3.5.1  
+##  [5] bindr_0.1.1      tools_3.5.1      digest_0.6.18    evaluate_0.12   
+##  [9] tibble_1.4.2     gtable_0.2.0     pkgconfig_2.0.2  rlang_0.3.1     
+## [13] rstudioapi_0.9.0 yaml_2.2.0       xfun_0.4         bindrcpp_0.2.2  
+## [17] withr_2.1.2      stringr_1.3.1    dplyr_0.7.8      knitr_1.21      
+## [21] grid_3.5.1       tidyselect_0.2.5 glue_1.3.0       R6_2.3.0        
+## [25] rmarkdown_1.11   purrr_0.3.0      magrittr_1.5     scales_1.0.0    
+## [29] codetools_0.2-15 htmltools_0.3.6  assertthat_0.2.0 colorspace_1.3-2
+## [33] labeling_0.3     stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0   
+## [37] crayon_1.3.4
 ```
