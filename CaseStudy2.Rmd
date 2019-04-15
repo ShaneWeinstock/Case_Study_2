@@ -17,10 +17,12 @@ We hypothesize, the sales departments, age and overall commute distance contribu
 DDSAnalytics a Fortune 1000 Company, is requesting their Data Scientist to review the data on ChemicalRepo. The management  at DDSAnalytics instructs to the Data Scientist, all results from the data must carry the exclusion of all employees under the age of 18. DDSAnalytics also request three factors associated to attrition in ChemicalRepo.  DDSAnalytics would like to suggest to ChemicalRepo workforce planning and identify high-potential employees who attribute to turnover. The management in DDSAnalytics will be using this data research as leverage in their talent management business. The Data Scientist will meet the request of reviewing attrition, they will also examine specific job role trends and report the findings. 
 
 
+
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
 #install.packages("readxl")
 #install.packages("ggplot2")
 #Establish the working directory.
+
 library(readxl)
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
 ```
@@ -29,7 +31,7 @@ setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
 
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
-Data <- data.frame(New.Data)
+Data <- as.data.frame(New.Data)
 head(Data) # original import of all data 
 dim(Data) # how many rows and columns in the original data set. 
 ```
@@ -48,7 +50,7 @@ lapply(Data, class) # review the class of the variables in the dataframe.
 
 # Tidy the data to manageable dataframe. 
 # Reduce the number of col in the dataframe and call the new dataframe Small.
-Small<- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS, Data$Education,  Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+Small<- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS, Data$Education,  Data$Ed.Field, Data$Title, Data$Income.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Ed.Lvl", "Education", "Title", "Income.mos", "mlg.Home")
@@ -115,13 +117,13 @@ Result : Number of management positions (Mfg and Research Directors, Sales Exec 
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
 
-Data <- data.frame(New.Data)
+Data <- as.data.frame(New.Data)
 
 names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
 
 Data <- setNames(Data, names)
 
-Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Income.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
@@ -208,6 +210,12 @@ Age2Income
 ```
 
 ```{r echo=TRUE, cache=TRUE, include=TRUE}
+##### different chunk ######
+
+head(Small)
+
+##########
+
 # Overall test when comparing both men and women in the workforce as one. 
 # Original Linear Regression to discover correlation between Age and Income
 ageincome.lm <- lm(Income.mos ~ Age, data = Small)
@@ -218,7 +226,7 @@ summary(ageincome.lm)
 plot(ageincome.lm)
 
 plot(x = Small$Age, y = Small$Income.mos, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
-displayDF <- data.frame(Small)
+displayDF <- as.data.frame(Small)
 
 # Regression Model
 ## Add the regression line to the existing scatterplot
@@ -406,6 +414,15 @@ is no apparent risk by this age bracket and this many number of jobs worked.
 # CONCLUSION
 We hypothesized sales representatives, age and overall commute distance contributes to attrition within a company. We find there is evidence to conclude the sales representatives, age and commute influence attrition. In addition, we find there no guarantee the longer someone works for a company the more income they will earn. The variance of any increase in pay base off of age is negligible compared to years within a company and the multiple departments in ChemicalRepo. Overall our hypothesis did prove to be correct on attrition and our hypothesis is correct. We do add ChemicalRepo could increae the income in Female employees and increase the job satisfaction. We also find commuting distance from work to home is a positive relationship. Those who work farther from home are most satisfied in the job as a Research Scientist. 
 
+#SESSION INFO.
 ```{r, echo=TRUE, cache=TRUE}
 sessionInfo()
 ```
+
+```{r, echo=TRUE, cache=TRUE}
+#install.packages("dataMaid")
+library(dataMaid)
+makeCodebook(Data, replace=TRUE)  
+
+```
+
