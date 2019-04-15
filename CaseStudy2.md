@@ -5,11 +5,10 @@ date: "4/3/2019"
 output:
   html_document:
     keep_md: yes
-  word_document: default
-  pdf_document: default
+
 ---
 # EXECUTIVE SUMMARY
-DDSAnalytics provided employee profiles on the current workforce of ChemicalRepo. In this dataset we were requested to review for the 3 contributing reasons of attrition in the ChemicalRepo. As Data Scientist, we there is a request from DDSAnalytics management to determine other interesting facts within this data on ChemicalRepo. We conclude the contributing factors for attrition is age of employment and those within the sales representative department. We recommend to either reduce the sales team to those below the age of 25 or increase it beyond 35 years of age. We also recommend on hiring to not hold back from higher employees with at least 8 jobs before they are 45. We conclude this is normal and not can be contributed to jobs held while in high school and college. Overall there is a larger section of men holding employment at ChemicalRepo by 60% of the workforce. We also determine those who live greater than 10 miles from their work are less likely to attrition. In conclusion ChemicalRepo could increase the number of females in their workforce, increase the hiring age beyond 35 years old for new employees and look for employees with a commute greater than 10 miles from the office.  Based off the information given, attrition will with reduce by concentration in this area of adjustments.
+DDSAnalytics provided employee profiles on the current workforce of ChemicalRepo. In this dataset we were requested to review for the 3 contributing reasons of attrition in the ChemicalRepo. As Data Scientist, we have a request from DDSAnalytics management to determine other interesting facts within this data on ChemicalRepo. We conclude the contributing factors for attrition is age of employment and those within the sales representative department. We recommend to either reduce the sales team to those below the age of 25 or increase it beyond 35 years of age. We also recommend, when hiring, do not hold back from hiring employees with at least 8 jobs before they are 45. We conclude this is normal and can be contributed to jobs held while in high school and college. Overall there is a larger section of men holding employment at ChemicalRepo by 60% of the workforce. We also determine those who live greater than 10 miles from their work are less likely to attrition. In conclusion ChemicalRepo could increase the number of females in their workforce, increase the hiring age beyond 35 years old for new employees and look for employees with a commute greater than 10 miles from the office.  Based off the information given, attrition will with reduce by concentration in this area of adjustments.
 
 # HYPOTHESIS
 We hypothesize, the sales departments, age and overall commute distance contributes to attrition within a company. 
@@ -817,7 +816,7 @@ summary(logageincome2.lm)
 
 With an extremely low R-Squared and no transformation narrowing our results for comparison, it is safe to say that there is not a correlation between Age and Income across these many variables. This would likely change given we select a smaller data set or a particular job, there is simply too much variation across all 1,400 data points.
 
-When we review the relationship between age to income in a regression split between men and women there is a small variance. Women have no significant change between age and income while men have a small increase in pay as they become older. Overall the variance is negligible  at Chemicalrepo.
+When we review the relationship between age to income in a regression split between men and women there is a small variance. Women have no significant change between age and income while men have a small increase in pay as they become older. Overall the variance is negligible  at ChemicalRepo.
 
 
 ### 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
