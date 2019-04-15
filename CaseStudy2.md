@@ -18,12 +18,24 @@ DDSAnalytics a Fortune 1000 Company, is requesting their Data Scientist to revie
 
 
 
+
 ```r
 #install.packages("readxl")
 #install.packages("ggplot2")
 #Establish the working directory.
+
+
 library(readxl)
-setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
+library(plyr)
+library(ggplot2)
+library(plyr)
+
+#Establish the working directory.
+getwd()
+```
+
+```
+## [1] "/Users/ktheobald/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2"
 ```
 
 ### 2.a ) Read the CSV file (we have xlsx) into the dataset call it Data. Output how many rows and columns 
@@ -41,7 +53,8 @@ New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy
 ```
 
 ```r
-Data <- data.frame(New.Data)
+Data <- as.data.frame(New.Data)
+
 head(Data) # original import of all data 
 ```
 
@@ -126,7 +139,8 @@ names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.H
 
 Data <- setNames(Data, names)
 
-head(Data)  #check new names
+#check new names
+head(Data)  
 ```
 
 ```
@@ -245,7 +259,9 @@ summary(Data)
 ```
 
 ```r
-lapply(Data, class) # review the class of the variables in the dataframe.
+# review the class of the variables in the dataframe.
+# Results indicate we are operating with character and numeric classes. 
+lapply(Data, class) 
 ```
 
 ```
@@ -356,11 +372,9 @@ lapply(Data, class) # review the class of the variables in the dataframe.
 ```
 
 ```r
-# Results indicate we are operating with character and numeric classes. 
-
 # Tidy the data to manageable dataframe. 
 # Reduce the number of col in the dataframe and call the new dataframe Small.
-Small<- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS, Data$Education,  Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+Small<- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS, Data$Education,  Data$Ed.Field, Data$Title, Data$Income.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Ed.Lvl", "Education", "Title", "Income.mos", "mlg.Home")
@@ -377,12 +391,12 @@ head(Small)
 ## 5        No  27   Male Married   2      1       Medical
 ## 6        No  32   Male  Single   7      2 Life Sciences
 ##                   Title Income.mos mlg.Home
-## 1       Sales Executive      19479        1
-## 2    Research Scientist      24907        8
-## 3 Laboratory Technician       2396        2
-## 4    Research Scientist      23159        3
-## 5 Laboratory Technician      16632        2
-## 6 Laboratory Technician      11864        2
+## 1       Sales Executive       5993        1
+## 2    Research Scientist       5130        8
+## 3 Laboratory Technician       2090        2
+## 4    Research Scientist       2909        3
+## 5 Laboratory Technician       3468        2
+## 6 Laboratory Technician       3068        2
 ```
 
 ### 3.a )   Is anyone under 18 participating in the study?
@@ -413,21 +427,21 @@ summary(Small)
 ##             3rd Qu.:43.00                               3rd Qu.: 9.000  
 ##             Max.   :60.00                               Max.   :40.000  
 ##                                                                         
-##             Education                         Title       Income.mos   
-##  Human Resources : 27   Sales Executive          :326   Min.   : 2094  
-##  Life Sciences   :606   Research Scientist       :292   1st Qu.: 8047  
-##  Marketing       :159   Laboratory Technician    :259   Median :14236  
-##  Medical         :464   Manufacturing Director   :145   Mean   :14313  
-##  Other           : 82   Healthcare Representative:131   3rd Qu.:20462  
-##  Technical Degree:132   Manager                  :102   Max.   :26999  
-##                         (Other)                  :215                  
-##     mlg.Home     
-##  Min.   : 1.000  
-##  1st Qu.: 2.000  
-##  Median : 7.000  
-##  Mean   : 9.193  
-##  3rd Qu.:14.000  
-##  Max.   :29.000  
+##      Ed.Lvl                 Education                         Title    
+##  Min.   :1.000   Human Resources : 27   Sales Executive          :326  
+##  1st Qu.:2.000   Life Sciences   :606   Research Scientist       :292  
+##  Median :3.000   Marketing       :159   Laboratory Technician    :259  
+##  Mean   :2.913   Medical         :464   Manufacturing Director   :145  
+##  3rd Qu.:4.000   Other           : 82   Healthcare Representative:131  
+##  Max.   :5.000   Technical Degree:132   Manager                  :102  
+##                                         (Other)                  :215  
+##    Income.mos       mlg.Home     
+##  Min.   : 2094   Min.   : 1.000  
+##  1st Qu.: 8047   1st Qu.: 2.000  
+##  Median :14236   Median : 7.000  
+##  Mean   :14313   Mean   : 9.193  
+##  3rd Qu.:20462   3rd Qu.:14.000  
+##  Max.   :26999   Max.   :29.000  
 ## 
 ```
 
@@ -451,7 +465,8 @@ plot(Small$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",
 # 3.d) Give Frequency for Gender, Education  and Occupation. How many are in management positions? 
 
 ```r
-summary(Small$Gender)  #Gender Summary Statistics.
+#Gender Summary Statistics.
+summary(Small$Gender)
 ```
 
 ```
@@ -460,9 +475,8 @@ summary(Small$Gender)  #Gender Summary Statistics.
 ```
 
 ```r
-# Result : Female   Male 
-#           588    882 
-summary(Small$Education)  #Education Field Summary Statistics.
+#Education Field Summary Statistics.
+summary(Small$Education)
 ```
 
 ```
@@ -473,9 +487,8 @@ summary(Small$Education)  #Education Field Summary Statistics.
 ```
 
 ```r
-# Result :  Human Resources    Life Sciences        Marketing          Medical            Other Technical Degree 
-#              27              606                       159              464               82              132 
-summary(Small$Ed.Lvl)  #Education Level Summary Statistics.
+#Education Level Summary Statistics.
+summary(Small$Ed.Lvl)  
 ```
 
 ```
@@ -491,7 +504,8 @@ summary(Small$Ed.Lvl)  #Education Level Summary Statistics.
 #	4 'Master'
 #	5 'Doctor'
 
-summary(Small$Title)  #Department titles and summary statistics.
+#Department titles and summary statistics.
+summary(Small$Title)  
 ```
 
 ```
@@ -506,16 +520,6 @@ summary(Small$Title)  #Department titles and summary statistics.
 ##      Sales Representative 
 ##                        83
 ```
-
-```r
-#Healthcare Representative           Human Resources     Laboratory Technician                   Manager 
-#                      131                        52                       259                       102 
-#   Manufacturing Director         Research Director        Research Scientist           Sales Executive 
-#                      145                        80                       292                       326 
-#     Sales Representative 
-#                       83 
-#
-```
 Result : Number of management positions (Mfg and Research Directors, Sales Exec and Managers)
          Total (145 + 80 + 326 + 102) = 653
 
@@ -525,21 +529,23 @@ Result : Number of management positions (Mfg and Research Directors, Sales Exec 
 setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
 New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
 
-Data <- data.frame(New.Data)
+Data <- as.data.frame(New.Data)
+
 
 names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
 
 Data <- setNames(Data, names)
 
-Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Rate.mos, Data$mlg.Home)      
+Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,   Data$Ed.Field, Data$Title, Data$Income.mos, Data$mlg.Home)      
 
 #Change col names in the smaller dataframe. 
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
 Small <- setNames (Small, names)
 
-library(plyr)
-Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0)) # DF Small, change in the Attrition column all Yes answers to 1 and all No answers to 0.
-head(Small$Attrition) # show the dataframe Small was revalued with 1's and 0's in the Attrition column. 
+#DF Small, modify qualitative variable attriation to a quantitaive boolean variable (where 1 is yes and no is 0).
+Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0)) 
+#Show the dataframe Small was revalued with 1's and 0's in the Attrition column. 
+head(Small$Attrition) 
 ```
 
 ```
@@ -548,8 +554,11 @@ head(Small$Attrition) # show the dataframe Small was revalued with 1's and 0's i
 ```
 
 ```r
-True.Attrition<- subset(Small, Small$Attrition==1)  #create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1.
-head(True.Attrition)  #show only the variables names the dataframe True.Attrition.
+#Create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1.
+True.Attrition <- subset(Small, Small$Attrition==1)  
+
+#Show only the variables names the dataframe True.Attrition.
+head(True.Attrition)
 ```
 
 ```
@@ -561,16 +570,17 @@ head(True.Attrition)  #show only the variables names the dataframe True.Attritio
 ## 25         1  34   Male Single   4       Medical    Research Scientist
 ## 27         1  32 Female Single  10 Life Sciences    Research Scientist
 ##    Income.mos mlg.Home
-## 1       19479        1
-## 3        2396        2
-## 15      12947       24
-## 22       6986        9
-## 25      17102        6
-## 27       4681       16
+## 1        5993        1
+## 3        2090        2
+## 15       2028       24
+## 22       3407        9
+## 25       2960        6
+## 27       3919       16
 ```
 
 ```r
-summary(True.Attrition) #summary statistics on variables impacted by attrition. 
+#Summary statistics on variables impacted by attrition.
+summary(True.Attrition) 
 ```
 
 ```
@@ -583,12 +593,12 @@ summary(True.Attrition) #summary statistics on variables impacted by attrition.
 ##            Max.   :58.00                               Max.   :40.000  
 ##                                                                        
 ##             Education                     Title      Income.mos   
-##  Human Resources : 7   Laboratory Technician :62   Min.   : 2326  
-##  Life Sciences   :89   Sales Executive       :57   1st Qu.: 8870  
-##  Marketing       :35   Research Scientist    :47   Median :14618  
-##  Medical         :63   Sales Representative  :33   Mean   :14559  
-##  Other           :11   Human Resources       :12   3rd Qu.:21081  
-##  Technical Degree:32   Manufacturing Director:10   Max.   :26999  
+##  Human Resources : 7   Laboratory Technician :62   Min.   : 1009  
+##  Life Sciences   :89   Sales Executive       :57   1st Qu.: 2373  
+##  Marketing       :35   Research Scientist    :47   Median : 3202  
+##  Medical         :63   Sales Representative  :33   Mean   : 4787  
+##  Other           :11   Human Resources       :12   3rd Qu.: 5916  
+##  Technical Degree:32   Manufacturing Director:10   Max.   :19859  
 ##                        (Other)               :16                  
 ##     mlg.Home    
 ##  Min.   : 1.00  
@@ -677,21 +687,80 @@ Results indicate there is dominating feature in marital status for Sales Represe
 ### 4.c   Is there a relationship between age and income, color each point based off of gender? 
 
 ```r
-library(ggplot2)
 par(las=2)
 
-## Overall test of data when comparing women to men in the workforce at ChemicalRepo.
-Age2Income<-ggplot(Small, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
+
+Age2Income<-ggplot(New.Data, aes(x=Age, y=MonthlyIncome, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
 Age2Income
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
+```r
+LinearCorrelation <- lm(MonthlyIncome ~ Age, data = New.Data)
+summary(LinearCorrelation)
+```
+
+```
+## 
+## Call:
+## lm(formula = MonthlyIncome ~ Age, data = New.Data)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -9990.1 -2592.7  -677.9  1810.5 12540.8 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -2970.67     443.70  -6.695 3.06e-11 ***
+## Age           256.57      11.67  21.995  < 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4084 on 1468 degrees of freedom
+## Multiple R-squared:  0.2479,	Adjusted R-squared:  0.2473 
+## F-statistic: 483.8 on 1 and 1468 DF,  p-value: < 2.2e-16
+```
 
 ```r
+Correlation.Age_Income <- sqrt(summary(LinearCorrelation)$r.squared)
+Correlation.Age_Income
+```
+
+```
+## [1] 0.4978546
+```
+
+
+```r
+##### different chunk ######
+
+head(Small)
+```
+
+```
+##   Attrition Age Gender   M.S.D YOS     Education                 Title
+## 1         1  41 Female  Single   6 Life Sciences       Sales Executive
+## 2         0  49   Male Married  10 Life Sciences    Research Scientist
+## 3         1  37   Male  Single   0         Other Laboratory Technician
+## 4         0  33 Female Married   8 Life Sciences    Research Scientist
+## 5         0  27   Male Married   2       Medical Laboratory Technician
+## 6         0  32   Male  Single   7 Life Sciences Laboratory Technician
+##   Income.mos mlg.Home
+## 1       5993        1
+## 2       5130        8
+## 3       2090        2
+## 4       2909        3
+## 5       3468        2
+## 6       3068        2
+```
+
+```r
+##########
+
 # Overall test when comparing both men and women in the workforce as one. 
 # Original Linear Regression to discover correlation between Age and Income
-ageincome.lm <- lm(Income.mos ~ Age, data = Small)
+ageincome.lm <- lm(MonthlyIncome ~ Age, data = New.Data)
 ageincome.res <- resid(ageincome.lm)
 summary(ageincome.lm)
 ```
@@ -699,22 +768,22 @@ summary(ageincome.lm)
 ```
 ## 
 ## Call:
-## lm(formula = Income.mos ~ Age, data = Small)
+## lm(formula = MonthlyIncome ~ Age, data = New.Data)
 ## 
 ## Residuals:
-##    Min     1Q Median     3Q    Max 
-## -12452  -6193    -45   6111  13056 
+##     Min      1Q  Median      3Q     Max 
+## -9990.1 -2592.7  -677.9  1810.5 12540.8 
 ## 
 ## Coefficients:
 ##             Estimate Std. Error t value Pr(>|t|)    
-## (Intercept) 13506.10     773.19  17.468   <2e-16 ***
-## Age            21.86      20.33   1.075    0.282    
+## (Intercept) -2970.67     443.70  -6.695 3.06e-11 ***
+## Age           256.57      11.67  21.995  < 2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 7117 on 1468 degrees of freedom
-## Multiple R-squared:  0.0007869,	Adjusted R-squared:  0.0001062 
-## F-statistic: 1.156 on 1 and 1468 DF,  p-value: 0.2825
+## Residual standard error: 4084 on 1468 degrees of freedom
+## Multiple R-squared:  0.2479,	Adjusted R-squared:  0.2473 
+## F-statistic: 483.8 on 1 and 1468 DF,  p-value: < 2.2e-16
 ```
 
 ```r
@@ -726,7 +795,16 @@ plot(ageincome.lm)
 
 ```r
 plot(x = Small$Age, y = Small$Income.mos, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
-displayDF <- data.frame(Small)
+```
+
+![](CaseStudy2_files/figure-html/unnamed-chunk-15-5.png)<!-- -->
+
+```r
+displayDF <- as.data.frame(Small)
+
+plot(x = New.Data$Age, y = New.Data$MonthlyIncome, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
+displayDF <- data.frame(New.Data)
+
 
 # Regression Model
 ## Add the regression line to the existing scatterplot
@@ -747,86 +825,26 @@ lines(newx, pred[,2], col = "green", lty = 2, lwd = 2)
 lines(newx, pred[,3], col = "green", lty = 2, lwd = 2)
 ```
 
-![](CaseStudy2_files/figure-html/unnamed-chunk-15-5.png)<!-- -->
-
-```r
-## Residual Plot
-plot(Small$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
-abline(0,0)
-```
-
 ![](CaseStudy2_files/figure-html/unnamed-chunk-15-6.png)<!-- -->
 
 ```r
-# Requires Transformation - log or log/log
-Small$logAge <- log(Small$Age)
-Small$logIncome <- log(Small$Income.mos)
-# Checking to see if Log Income
-logageincome.lm <- lm(logIncome ~ Age, data = Small)
-logageincome.res <- resid(logageincome.lm)
-summary(logageincome.lm)
+## Residual Plot
+plot(New.Data$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
+abline(0,0)
 ```
 
-```
-## 
-## Call:
-## lm(formula = logIncome ~ Age, data = Small)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7662 -0.3959  0.1635  0.5231  0.8267 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(>|t|)    
-## (Intercept) 9.346636   0.068824 135.806   <2e-16 ***
-## Age         0.001508   0.001809   0.834    0.405    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.6335 on 1468 degrees of freedom
-## Multiple R-squared:  0.0004732,	Adjusted R-squared:  -0.0002077 
-## F-statistic: 0.6949 on 1 and 1468 DF,  p-value: 0.4046
-```
-
-```r
-logageincome2.lm <- lm(logIncome ~ logAge, data = Small)
-summary(logageincome2.lm)
-```
-
-```
-## 
-## Call:
-## lm(formula = logIncome ~ logAge, data = Small)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7620 -0.4008  0.1645  0.5225  0.8196 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  9.28922    0.23700  39.196   <2e-16 ***
-## logAge       0.03161    0.06608   0.478    0.632    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 0.6336 on 1468 degrees of freedom
-## Multiple R-squared:  0.0001559,	Adjusted R-squared:  -0.0005252 
-## F-statistic: 0.2289 on 1 and 1468 DF,  p-value: 0.6324
-```
+![](CaseStudy2_files/figure-html/unnamed-chunk-15-7.png)<!-- -->
 
 With an extremely low R-Squared and no transformation narrowing our results for comparison, it is safe to say that there is not a correlation between Age and Income across these many variables. This would likely change given we select a smaller data set or a particular job, there is simply too much variation across all 1,400 data points.
 
 When we review the relationship between age to income in a regression split between men and women there is a small variance. Women have no significant change between age and income while men have a small increase in pay as they become older. Overall the variance is negligible  at ChemicalRepo.
 
 
-### 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
+### 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions.   
 
 
 ```r
-library(ggplot2)
 par(las=2)
-
-library(plyr)
 DSJob <- subset(Data, Title=="Research Scientist")  #subset out from the large dataframe Data only those who have the title Research Scientist.
 ```
 
@@ -1001,6 +1019,7 @@ is no apparent risk by this age bracket and this many number of jobs worked.
 # CONCLUSION
 We hypothesized sales representatives, age and overall commute distance contributes to attrition within a company. We find there is evidence to conclude the sales representatives, age and commute influence attrition. In addition, we find there no guarantee the longer someone works for a company the more income they will earn. The variance of any increase in pay base off of age is negligible compared to years within a company and the multiple departments in ChemicalRepo. Overall our hypothesis did prove to be correct on attrition and our hypothesis is correct. We do add ChemicalRepo could increae the income in Female employees and increase the job satisfaction. We also find commuting distance from work to home is a positive relationship. Those who work farther from home are most satisfied in the job as a Research Scientist. 
 
+#SESSION INFO.
 
 ```r
 sessionInfo()
@@ -1022,17 +1041,35 @@ sessionInfo()
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] ggplot2_3.1.1 plyr_1.8.4    readxl_1.3.1 
+## [1] pander_0.6.3   dataMaid_1.2.0 ggplot2_3.1.1  plyr_1.8.4    
+## [5] readxl_1.3.1  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.0       cellranger_1.1.0 pillar_1.3.1     compiler_3.5.1  
-##  [5] bindr_0.1.1      tools_3.5.1      digest_0.6.18    evaluate_0.12   
-##  [9] tibble_1.4.2     gtable_0.2.0     pkgconfig_2.0.2  rlang_0.3.1     
-## [13] rstudioapi_0.9.0 yaml_2.2.0       xfun_0.4         bindrcpp_0.2.2  
-## [17] withr_2.1.2      stringr_1.3.1    dplyr_0.7.8      knitr_1.21      
-## [21] grid_3.5.1       tidyselect_0.2.5 glue_1.3.0       R6_2.3.0        
-## [25] rmarkdown_1.11   purrr_0.3.0      magrittr_1.5     scales_1.0.0    
-## [29] codetools_0.2-15 htmltools_0.3.6  assertthat_0.2.0 colorspace_1.3-2
-## [33] labeling_0.3     stringi_1.2.4    lazyeval_0.2.1   munsell_0.5.0   
-## [37] crayon_1.3.4
+##  [1] Rcpp_1.0.0        DEoptimR_1.0-8    cellranger_1.1.0 
+##  [4] pillar_1.3.1      compiler_3.5.1    bindr_0.1.1      
+##  [7] forcats_0.4.0     tools_3.5.1       digest_0.6.18    
+## [10] evaluate_0.12     tibble_1.4.2      gtable_0.2.0     
+## [13] pkgconfig_2.0.2   rlang_0.3.1       rstudioapi_0.9.0 
+## [16] yaml_2.2.0        haven_2.1.0       xfun_0.4         
+## [19] bindrcpp_0.2.2    gridExtra_2.3     withr_2.1.2      
+## [22] stringr_1.3.1     dplyr_0.7.8       knitr_1.21       
+## [25] hms_0.4.2         grid_3.5.1        tidyselect_0.2.5 
+## [28] robustbase_0.93-4 glue_1.3.0        R6_2.3.0         
+## [31] rmarkdown_1.11    purrr_0.3.0       magrittr_1.5     
+## [34] codetools_0.2-15  scales_1.0.0      htmltools_0.3.6  
+## [37] assertthat_0.2.0  colorspace_1.3-2  labeling_0.3     
+## [40] stringi_1.2.4     lazyeval_0.2.1    munsell_0.5.0    
+## [43] crayon_1.3.4
 ```
+
+
+```r
+#install.packages("dataMaid")
+library(dataMaid)
+makeCodebook(Data, replace=TRUE)  
+```
+
+```
+## Data report generation is finished. Please wait while your output file is being rendered.
+```
+
