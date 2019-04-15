@@ -1,11 +1,11 @@
 ---
 title: "CaseStudy2"
-author: "Kari Theobald, Shane Weinstock, Jeremey Simpson, Gabe Gonzales"
+author: "Kari Theobald, Shane Weinstock, Jeremy Simpson, Gabe Gonzales"
 date: "4/3/2019"
 output:
-  word_document: default
   html_document:
     keep_md: yes
+  word_document: default
   pdf_document: default
 ---
 # EXECUTIVE SUMMARY
