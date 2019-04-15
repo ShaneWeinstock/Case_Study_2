@@ -18,17 +18,22 @@ DDSAnalytics a Fortune 1000 Company, is requesting their Data Scientist to revie
 
 
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
-#install.packages("readxl")
-#install.packages("ggplot2")
-#Establish the working directory.
+install.packages("readxl")
+install.packages("ggplot2")
+
 library(readxl)
-setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
+library(plyr)
+library(ggplot2)
+library(plyr)
+
+#Establish the working directory.
+getwd()
 ```
 
 ### 2.a ) Read the CSV file (we have xlsx) into the dataset call it Data. Output how many rows and columns 
 
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
-New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
+New.Data <- read_xlsx("CaseStudy2-data.xlsx")
 Data <- data.frame(New.Data)
 head(Data) # original import of all data 
 dim(Data) # how many rows and columns in the original data set. 
@@ -40,11 +45,13 @@ names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.H
 
 Data <- setNames(Data, names)
 
-head(Data)  #check new names
+#check new names
+head(Data)  
 summary(Data)
 
-lapply(Data, class) # review the class of the variables in the dataframe.
+# review the class of the variables in the dataframe.
 # Results indicate we are operating with character and numeric classes. 
+lapply(Data, class) 
 
 # Tidy the data to manageable dataframe. 
 # Reduce the number of col in the dataframe and call the new dataframe Small.
@@ -82,13 +89,14 @@ plot(Small$Attrition , xlab = "Attrition in the Workforce",   ylab= "Employees",
 
 # 3.d) Give Frequency for Gender, Education  and Occupation. How many are in management positions? 
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
-summary(Small$Gender)  #Gender Summary Statistics.
-# Result : Female   Male 
-#           588    882 
-summary(Small$Education)  #Education Field Summary Statistics.
-# Result :  Human Resources    Life Sciences        Marketing          Medical            Other Technical Degree 
-#              27              606                       159              464               82              132 
-summary(Small$Ed.Lvl)  #Education Level Summary Statistics.
+#Gender Summary Statistics.
+summary(Small$Gender)
+
+#Education Field Summary Statistics.
+summary(Small$Education)
+
+#Education Level Summary Statistics.
+summary(Small$Ed.Lvl)  
 # Education
 # 1 'Below College'
 #	2 'College'
@@ -96,25 +104,15 @@ summary(Small$Ed.Lvl)  #Education Level Summary Statistics.
 #	4 'Master'
 #	5 'Doctor'
 
-summary(Small$Title)  #Department titles and summary statistics.
-#Healthcare Representative           Human Resources     Laboratory Technician                   Manager 
-#                      131                        52                       259                       102 
-#   Manufacturing Director         Research Director        Research Scientist           Sales Executive 
-#                      145                        80                       292                       326 
-#     Sales Representative 
-#                       83 
-#
-
-
+#Department titles and summary statistics.
+summary(Small$Title)  
 ```
 Result : Number of management positions (Mfg and Research Directors, Sales Exec and Managers)
          Total (145 + 80 + 326 + 102) = 653
 
 ###Using only the data where Attrition is True. 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
-setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
-New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
-
+New.Data <- read_xlsx("CaseStudy2-data.xlsx")
 Data <- data.frame(New.Data)
 
 names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
@@ -127,13 +125,19 @@ Small <- data.frame(Data$Attrition, Data$Age, Data$Gender, Data$M.S.D, Data$YOS,
 names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
 Small <- setNames (Small, names)
 
-library(plyr)
-Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0)) # DF Small, change in the Attrition column all Yes answers to 1 and all No answers to 0.
-head(Small$Attrition) # show the dataframe Small was revalued with 1's and 0's in the Attrition column. 
-True.Attrition<- subset(Small, Small$Attrition==1)  #create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1.
-head(True.Attrition)  #show only the variables names the dataframe True.Attrition.
-summary(True.Attrition) #summary statistics on variables impacted by attrition. 
- 
+#DF Small, modify qualitative variable attriation to a quantitaive boolean variable (where 1 is yes and no is 0).
+Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0)) 
+#Show the dataframe Small was revalued with 1's and 0's in the Attrition column. 
+head(Small$Attrition) 
+
+#Create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1.
+True.Attrition <- subset(Small, Small$Attrition==1)  
+
+#Show only the variables names the dataframe True.Attrition.
+head(True.Attrition)
+
+#Summary statistics on variables impacted by attrition.
+summary(True.Attrition) 
 ```
 When Years of Service is 0, the employee is indicating they have worked less than 1 year.
 
@@ -198,27 +202,30 @@ Results indicate there is dominating feature in marital status for Sales Represe
 
 ### 4.c   Is there a relationship between age and income, color each point based off of gender? 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
-library(ggplot2)
 par(las=2)
 
-## Overall test of data when comparing women to men in the workforce at ChemicalRepo.
-Age2Income<-ggplot(Small, aes(x=Age, y=Income.mos, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
+
+Age2Income<-ggplot(New.Data, aes(x=Age, y=MonthlyIncome, group=Gender, color =Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm") + xlab("Age (years) of Employee") +  ylab("Monthly Income") + ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
 Age2Income
 
+LinearCorrelation <- lm(MonthlyIncome ~ Age, data = New.Data)
+summary(LinearCorrelation)
+Correlation.Age_Income <- sqrt(summary(LinearCorrelation)$r.squared)
+Correlation.Age_Income
 ```
 
 ```{r echo=TRUE, cache=TRUE, include=TRUE}
 # Overall test when comparing both men and women in the workforce as one. 
 # Original Linear Regression to discover correlation between Age and Income
-ageincome.lm <- lm(Income.mos ~ Age, data = Small)
+ageincome.lm <- lm(MonthlyIncome ~ Age, data = New.Data)
 ageincome.res <- resid(ageincome.lm)
 summary(ageincome.lm)
 
 # Simple Regression Model
 plot(ageincome.lm)
 
-plot(x = Small$Age, y = Small$Income.mos, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
-displayDF <- data.frame(Small)
+plot(x = New.Data$Age, y = New.Data$MonthlyIncome, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income")
+displayDF <- data.frame(New.Data)
 
 # Regression Model
 ## Add the regression line to the existing scatterplot
@@ -239,19 +246,8 @@ lines(newx, pred[,2], col = "green", lty = 2, lwd = 2)
 lines(newx, pred[,3], col = "green", lty = 2, lwd = 2)
 
 ## Residual Plot
-plot(Small$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
+plot(New.Data$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
 abline(0,0)
-
-# Requires Transformation - log or log/log
-Small$logAge <- log(Small$Age)
-Small$logIncome <- log(Small$Income.mos)
-# Checking to see if Log Income
-logageincome.lm <- lm(logIncome ~ Age, data = Small)
-logageincome.res <- resid(logageincome.lm)
-summary(logageincome.lm)
-
-logageincome2.lm <- lm(logIncome ~ logAge, data = Small)
-summary(logageincome2.lm)
 ```
 
 With an extremely low R-Squared and no transformation narrowing our results for comparison, it is safe to say that there is not a correlation between Age and Income across these many variables. This would likely change given we select a smaller data set or a particular job, there is simply too much variation across all 1,400 data points.
@@ -259,15 +255,11 @@ With an extremely low R-Squared and no transformation narrowing our results for 
 When we review the relationship between age to income in a regression split between men and women there is a small variance. Women have no significant change between age and income while men have a small increase in pay as they become older. Overall the variance is negligible  at ChemicalRepo.
 
 
-### 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions. 
+### 4.d What about Life Satisfaction? Is there a discernable relationship there to what?  (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the  distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions.   
 
 ```{r, echo=TRUE, cache=TRUE, include=TRUE}
-library(ggplot2)
 par(las=2)
-
-library(plyr)
 DSJob <- subset(Data, Title=="Research Scientist")  #subset out from the large dataframe Data only those who have the title Research Scientist.
-
 ```
 
 ### Other comparisons. 
