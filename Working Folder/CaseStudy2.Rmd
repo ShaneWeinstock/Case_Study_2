@@ -20,11 +20,13 @@ DDSAnalytics a Fortune 1000 Company, is requesting their Data Scientist to revie
 ```{r, echo=TRUE, cache=TRUE, include = TRUE}
 #install.packages("readxl")
 #install.packages("ggplot2")
+#install.packages("dataMaid")
 
 library(readxl)
 library(plyr)
 library(ggplot2)
 library(plyr)
+library(dataMaid)
 
 #Establish the working directory.
 getwd()
@@ -400,4 +402,13 @@ We hypothesized sales representatives, age and overall commute distance contribu
 
 ```{r, echo=TRUE, cache=TRUE}
 sessionInfo()
+```
+
+```{r, echo=TRUE, cache=TRUE}
+#create a codebook
+makeCodebook(Data, replace=TRUE)
+#makeCodebook(Small, replace = TRUE)  #pull data for database Small
+#makeCodebook(True.Attrition, replace = TRUE)  #pull data for database True.Attrition
+#makeCodebook(DSJob, replace = TRUE)   #pull data for database DSJob
+
 ```
