@@ -340,7 +340,7 @@ We recommend to either reduce the sales team to those below the age of 25 or inc
 
 We hypothesized sales representatives, age and overall commute distance contributes to attrition within a company. We find there is evidence to conclude the sales representatives, age and commute influence attrition. We have discovered that the longer that an employee works for the company, the more they will earn. We do add ChemicalRepo could increae the income in Female employees and increase the job satisfaction. We also found that an increase in commuting distance to work is a positive relationship, meaning employees who live further from work are generally more satisfied and that those who work furthest from home are most satisfied, and this also held true in the job role of a Research Scientist. 
 
-## sessionInfo()
+## sessionInfo()  
 
 ## R version 3.5.1 (2018-07-02)
 ## Platform: x86_64-apple-darwin15.6.0 (64-bit)
