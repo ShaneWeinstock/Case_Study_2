@@ -12,12 +12,15 @@
 ### Determine of a relationship exists between Age and Income
 ### Discern a possible relationship (correlation) between Life Satisfaction and another variable
 
-## First, install necessary packages in R
+## First, install necessary packages and libraries in R
 ### install.packages("readxl")
 ### install.packages("ggplot2")
+### library(readxl)
+### library(plyr)
+### library(ggplot2)
+### library(plyr)
 
 ## Now establish your working directory
-### library(readxl)
 ### setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
 
 ## 2.a ) Read the CSV file (we have xlsx) into the dataset call it Data. Output how many rows and columns
@@ -29,7 +32,7 @@
 ### names <- c( "Age", "Attrition", "Feq.Travel", "Daily.Rate", "Department", "mlg.Home", "Education", "Ed.Field", "Emp.Count", "Emp.Number", "Env.Sat", "Gender", "HourlyRate", "Job.Invol", "Job.Level", "Title", "Satisfied", "M.S.D", "Income.mos","Rate.mos", "Jobs.Worked", "Over18", "OT", "Percent.Inc" , "Performance", "Sat.Relation", "Hours", "Stock", "Yrs.Wrkd", "Training", "Work.Life", "YOS", "YCRole","YbtwnPromo", "YwMgmt")
 ### Data <- setNames(Data, names)
 
-## Be sure to check your names
+## Check your names
 ### head(Data) 
 
 ##  review the class of the variables in the dataframe
@@ -80,8 +83,6 @@ Result	:	Number	of	management	positions	(Mfg	and	Research	Directors,	Sales	Exec	
 Managers)	Total	(145	+	80	+	326	+	102)	=	653
 
 ## Using only the data where Attrition is True
-### setwd("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2")
-
 ### New.Data <- read_xlsx("~/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/CaseStudy2-data.xlsx")
 ### Data <- data.frame(New.Data)
 
@@ -93,18 +94,15 @@ Managers)	Total	(145	+	80	+	326	+	102)	=	653
 
 ## Change col names in the smaller dataframe
 ### names <- c( "Attrition", "Age", "Gender", "M.S.D", "YOS", "Education", "Title", "Income.mos", "mlg.Home")
-
 ### Small <- setNames (Small, names)
-
-### library(plyr)
 
 ##  DF Small, change in the Attrition column all Yes answers to 1 and all No answers to 0
 ### Small$Attrition <- revalue(Small$Attrition, c("Yes"=1, "No" = 0))
 
-##  show the dataframe Small was revalued with 1's and 0's in the Attrition column
+##  Show the dataframe Small was revalued with 1's and 0's in the Attrition column
 ### head(Small$Attrition)
 
-## #create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1
+## Create a dataframe called True.Attrition out of the dataframe Small. Pull out only the rows in Small for when the Attrition column is = 1
 ### True.Attrition<- subset(Small, Small$Attrition==1)
 
 ## show only the variables names the dataframe True.Attrition
@@ -139,7 +137,7 @@ The	graphical	results	show	a	right	skew.	The	older	the	age	of	the	employee,	it	i
 for	the	company	to	experience	attrition.	We	show	a	spike	of	attrition	between	the	age	of	25	
 to	35.	Outside	of	the	age	bracket	the	attrition	goes	down.
 
-## Other components impacting attrition. Review Department Titles compared to Gender
+## Variables impacting attrition. Review Department Titles compared to Gender
 ### library (ggplot2)
 ### par(las=1)
 ### Attrition.Gender <- ggplot(True.Attrition, aes(x=True.Attrition$Gender,
@@ -147,6 +145,8 @@ to	35.	Outside	of	the	age	bracket	the	attrition	goes	down.
 ### geom_bar(stat="identity", position="dodge") + xlab("Gender (Female/Male)") +
 ### ylab("Department Titles") + ggtitle("Attrition vs. Department") +
 ### theme(plot.title = element_text(hjust = .5))
+
+### Attrition.Gender
 
  Results	indicate	attrition	is	dominant	in	the	Sales	Executives	and	Sales	Representative	field	 for	both	men	and	women.	This	could	largely	be	due	to	travel	required.
 
@@ -166,7 +166,7 @@ keep	a	younger	sales	team	below	the	###	age	of	25	or	over	the	age	of	35	to	assis
 reducing	attrition.	The	workforce	does	have	sales	representative	over	45	and	in	their	mid	
 50’s	and	the	attrition	rate	of	these	age	groups	is	significantly	###	less.
 
-## Other influences on attrition? Does being married, single or divorced have anyimpact on Sales Representatives. We show married people are less likely to cause attrition than single and divorced employees. What does this company have in attrition and marital status?
+## What are other influential facotrs on attrition? Does being married, single or divorced have anyimpact on Sales Representatives. We show married people are less likely to cause attrition than single and divorced employees. What does this company have in attrition and marital status?
 
 ### par(las=1)
 ### SalesvsMSD <- ggplot(True.Attrition, aes(x=True.Attrition$M.S.D,
@@ -184,16 +184,18 @@ attrition	with	this	company	in	this	department/title.
 
 ## 4.c Is there a relationship between age and income, color each point based off of gender?
 
-### library(ggplot2)
 ### par(las=2)
 
-##  Overall test of data when comparing women to men in the workforce at ChemicalRepo
 ### Age2Income<-ggplot(Small, aes(x=Age, y=Income.mos, group=Gender, color
 ### =Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method="lm") +
 ### xlab("Age (years) of Employee") + ylab("Monthly Income") +
 ### ggtitle("Workforce Income compared to Age") + theme(plot.title = element_text(hjust = 0.5))
-
 ### Age2Income
+
+### LinearCorrelation <- lm(MonthlyIncome ~ Age, data = New.Data)
+### summary(LinearCorrelation)
+### Correlation.Age_Income <- sqrt(summary(LinearCorrelation)$r.squared)
+### Correlation.Age_Income
 
 ## Overall test when comparing both men and women in the workforce as one
 ### ageincome.lm <- lm(Income.mos ~ Age, data = Small)
@@ -208,13 +210,12 @@ attrition	with	this	company	in	this	department/title.
 ### plot(x = Small$Age, y = Small$Income.mos, ylim=c(0,50000), xlab = "Age", ylab = "Income", main = "Age vs Income") displayDF <- data.frame(Small)
 
 ## Regression Model
-
-###  Add the regression line to the existing scatterplot
+##  Add the regression line to the existing scatterplot
 ### abline(ageincome.lm, col = "red")
 
 ## Create "new" data to make confidence and prediction intervals
 ### newx <- displayDF$Age
-newx <- sort(newx)
+### newx <- sort(newx)
 
 ## Confidence Internal
 ### conf <- predict(ageincome.lm, newdata = data.frame(Age = newx), interval = c("confidence"), type = c("response"), level = .95)
@@ -232,168 +233,112 @@ newx <- sort(newx)
 ### plot(Small$Age, ageincome.res, ylab = "Residuals", xlab = "Year", main = "Residuals vs. Year")
 ### abline(0,0)
 
-## Requires Transformation - log or log/log
-### Small$logAge <- log(Small$Age)
-### Small$logIncome <- log(Small$Income.mos)
+After checking assumptions we were able to determine that there is a correlation between age and income. The specific values pertaining to this are displayed above.
 
-## Checking to see if Log Income
-### logageincome.lm <- lm(logIncome ~ Age, data = Small)
-### logageincome.res <- resid(logageincome.lm)
-### summary(logageincome.lm)
-
-### logageincome2.lm <- lm(logIncome ~ logAge, data = Small)
-### summary(logageincome2.lm)
-
-With	an	extremely	low	R-Squared	and	no	transformation	narrowing	our	results	for	
-comparison,	it	is	safe	to	say	that	there	is	not	a	correlation	between	Age	and	Income	across	
-these	many	variables.	This	would	likely	change	given	we	select	a	smaller	data	set	or	a	
-particular	job,	there	is	simply	too	much	variation	across	all	1,400	data	points.
-When	we	review	the	relationship	between	age	to	income	in	a	regression	split	between	men	
-and	women	there	is	a	small	variance.	Women	have	no	significant	change	between	age	and	
-income	while	men	have	a	small	increase	in	pay	as	they	become	older.	Overall	the	variance	
-is	negligible	at	Chemicalrepo.
+When we review the relationship between age to income in a regression split between men and women there is a small variance. Women have no significant change between age and income while men have a small increase in pay as they become older. Overall the variance is negligible at ChemicalRepo.
 
 ## 4.d What about Life Satisfaction? Is there a discernable relationship there to what? (Trends and Observations) In this study we margined out the Research Scientist. We reviewed the overall satisfaction levels of Research Scientist relative to the distance they travel to work, their Age, their monthly Income, Marital Status and Years between Promotions.
-
-## Load necessary libraries
-### library(ggplot2)
-### par(las=2)
-### library(plyr)
 
 ## #subset out from the large dataframe Data only those who have the title Research Scientist.
 ### DSJob <- subset(Data, Title=="Research Scientist") 
 
 ## Other comparisons.
+All comparisons that have been observed with an ordered response are organized on a scale of 1 to 4, with 4 representing a response of "Very Highly Satisfied".
 
 ## Compare Satisfaction in the overall workforce in ChemicalRepo by commute distance. (miles from home).
-
 ## Compare Satisfaction by Research Scientist in ChemicalRepo by their commute.
 
 ## Total Workforce comparison of Satisfaction vs miles from home.
 ### LifeSat2Home<-ggplot(Data, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") + ylab("Satisfied with their Job") + ggtitle("Workforce Satisfied Life by Distance to Home") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
 ### LifeSat2Home
+## LifeSat2Homelm <- lm(Satisfied ~ mlg.Home, data = Data)
 
 ## Research Scientist Satisfied vs miles from home
 ### LifeSat2HomeDS<-ggplot(DSJob, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") + ylab("Satisfied with their Job") + ggtitle("Satisfied Life vs. Distance to Home for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
 ### LifeSat2HomeDS
+### LifeSat2HomeDSlm <- lm(Satisfied ~ mlg.Home, data = DSJob)
+### summary(LifeSat2HomeDSlm)
 
-On	a	scale	of	1	to	4, 	with	4	being	Very	Highly	in	satisfaction,	we	conclude	the	employees	as	a	
-whole	in	ChemicalRepo	report	a	Medium	to	High	satisfaction	with	the	distance	in	commute.	
-Men	appear	to	be	more	satisfied	than	women	in	the	workforce	by	their	commute	distance.	
-When	we	review	Research	Scientist,	they	too	have	a	positive	relationship	to	the	company	
-as	men	are	more	satisfied	than	women	in	how	far	they	commute	to	work.	Interesting	factor,	
-both	men	and	women	who	work	as	Research	Scientist	find	a	higher	satisfaction	with	the	
-company	the	more	miles	they	drive	to	work.	The	longer	the	Research	Scientist	commutes	
-the	happier	they	are	within	the	company.
+We can conclude the employees as a whole in ChemicalRepo report a  "Medium" to "High" satisfaction with the distance in commute. Men appear to be more satisfied than women in the workforce when they are observed to have a longer commute distance. When we review the Research Scientist specifically, they too have a positive correlation (as we see mileage increase we also saw satisfaction increase), and also that men are more satisfied than women when faced with longer commutes to work. This was an interesting factor for us, as both men and women who work as Research Scientist find a higher satisfaction with the company the more miles they drive to work.
+
+## Compare Satisfaction in the overall workforce in ChemicalRepo by Age of employee.
+## Compare Satisfaction by Research Scientist in ChemicalRepo Age of employee.
+
+## Total Workforce comparison of Satisfaction vs Age of employee.
+### Workforce.Age<-ggplot(Data, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Age (years)") +  ylab("Satisfied in their Job") + ggtitle("Workforce Satisfied Life vs. Age") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+### Workforce.Age
+
+## Research Scientist Satisfied vs Age of employee.
+### DS.Age<-ggplot(DSJob, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Age (years) of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
+### DS.Age
+
+We can conclude the employees as a whole in ChemicalRepo with men having a higher job satisfaction the older men become. As women grow older, they become less satisfied within the company. When reviewing the Research Scientist department, we find a very similar comparison for men and women. Women decline in job satisfaction at ChemicalRepo at an older age, while men increase within a small margin in job satisfaction at an older age in respect to the Research Scientist position.
+
+## Compare Satisfaction in the overall workforce in ChemicalRepo by Marital Status.
+## Compare Satisfaction by Research Scientist in ChemicalRepo by Marital Status.
+
+## Total Workforce comparison of Satisfaction vs Marital Status.
+### Workforce.Alter<-ggplot(Data, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("Workforce Satisfied Life vs. Marital Status") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+### Workforce.Alter
+
+## Research Scientist Satisfied vs Marital Status.
+### DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("Married, Single and Divorced Research Scientist, Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+### DS.Alter
+
+We can conclude that the male employees in ChemicalRepo are "Medium" to "Highly" satisfied. We are also able to conclude that women who are divorced are less satisfied than single women. Yet married women demonstrate the highest satisfaction rating of all three types of marital statuses. Married women are almost "Highly" satisfied at ChemicalRepo.  When reviewing Research Scientist women are consistent in job satisfaction at a "Medium" to "Highly" satisfied ranking. However, men who are married are closer to "highly satisfied" compared to their respectively lower, single and divorced Research Scientist. 
 
 ## Compare Satisfaction in the overall workforce in ChemicalRepo by Yrs between promotion.
-
 ## Compare Satisfaction by Research Scientist in ChemicalRepo by Yrs between promotion.
 
-## Total Workforce comparison of Satisfaction vs Years between Promotions
-### Workforce.Promo<-ggplot(Data, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Years between Promotions") + ylab("Satisfied in Job") + ggtitle("Workforce Satisfied Life vs. Years between Promotions") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
+## Total Workforce comparison of Satisfaction vs Years between Promotions.
+### Workforce.Promo<-ggplot(Data, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Years between Promotions") +  ylab("Satisfied in Job") + ggtitle("Workforce Satisfied Life vs. Years between Promotions") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 ### Workforce.Promo
 
-## Research Scientist Satisfied vs Years between Promotions.
-### DS.Promo <- ggplot(DSJob, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Years between Promotions") + ylab("Satisfied in Job") + ggtitle("Years between Promotions vs. Satisfaction as a Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
+## Research Scientist Satisfied vs Years between Promotions. 
+### DS.Promo <- ggplot(DSJob, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Years between Promotions") +  ylab("Satisfied in Job") + ggtitle("Years between Promotions vs. Satisfaction as a Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 ### DS.Promo
 
-On	a	scale	of	1	to	4, 4	being Very	Highly	in	satisfaction,	we	conclude	the	employees	as	a	
-whole	in	ChemicalRepo	are	between	Medium	to	Highly	Satisfied.	Both	women	and	men	
-become	slightly	less	satisfied	in	their	Jobs	the	longer	they	wait	between	promotions.	In	
-review	of	employees	titled	as	Research	Scientist,	women	become	less	satisfied	at	a	faster	
-rate	than	men	in	years	between	promotions.	Women	max	out	at	10	years	between	
-promotion	but	men	continue	to	wait	longer	as	Research	Scientist.	This	could	be	due	to	
-years	of	service	within	the	company	rather	than	the	candidate	being	ignored	for	other	
-reasons.
+We can conclude that the employees as a whole in ChemicalRepo are between "Medium" to "Highly" Satisfied in respect to the years between promotions. As to be expected, both women and men become slightly less satisfied in their Jobs the longer they wait between promotions. In review of employees titled as Research Scientist, women become less satisfied at a faster rate than men in years between promotions. Women max out at 10 years between promotion but men continue to wait longer as Research Scientist. This could be due to years of service within the company rather than the candidate being ignored for other reasons.
 
 ## Compare Satisfaction in the overall workforce in ChemicalRepo by Income earned per month.
-
 ## Compare Satisfaction by Research Scientist in ChemicalRepo by Income earned per month.
 
 ## Total Workforce comparison of Satisfaction vs Income per month.
 ### Workforce.Income<-ggplot(Data, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Income per Month (dollars)") + ylab("Satisfied in their Job") + ggtitle("Workforce Satisfied Life vs. Income per Month") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
 ### Workforce.Income
 
 ## Compare income compared to job satisfaction (male vs female).
 ### DS.Income <- ggplot(DSJob, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Monthly Income") + ylab("Satisfied in their Job") + ggtitle("Income as a Research Scientist vs. Satisfied Job for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
 ### DS.Income
 
-On	a	scale	of	1	to	4, 	4	being	Very	Highly	in	satisfaction,	we	conclude	the	employees	as	a	
-whole	in	ChemicalRepo	are	between	Medium	to	Highly	Satisfied.	While	men	have	a	slightly	
-higher	approval	rating	in	job	satisfaction	compared	to	women,	the	difference	is	marginal.	
-The	results	indicate	as	a	Research	Scientist,	men	are	paid	a	higher	monthly	income	overall.	
-The	more	men	are	paid	the	less	satisfied	they	are	with	work.	They	start	with	ranking	their	
-satisfaction	beyond	Highly	Satisfied	but	as	they	increase	past	$5k	a	month,	men	go	below	
-the	job	satisfaction	of	women.	Men	who	make	almost	$10k	a	month	rank	a	Medium	
-Satisfaction	with	the	job.	Which	is	in	reverse	to	most	would	consider	as	a	normal	response	
-to	an	increase	in	pay.	We	can	contribute	this	to	more	demands	on	the	male	employees	who	
-are	making	more	income.	However,	the	more	women	are	paid	the	more	satisfied	they	are	
-with	working.
+We can conclude the employees as a whole in ChemicalRepo are between "Medium" to "Highly" Satisfied with the income or compensation they receive. While men have a slightly higher approval rating in job satisfaction compared to women with respects to income, the difference is marginal.  The results indicate as a Research Scientist, men are paid a higher monthly income overall. The more men are paid the less satisfied they are with work. They start with ranking their satisfaction beyond "Highly Satisfied" but as they increase past $5k a month, it's observed that their job satisfaction drops below that of women. Men who make almost $10k a month rank a "Medium Satisfaction" with the job.  Which is inversed to what most would consider as a normal response to an increase in pay.  We believe this could be contributed to an increase of demands on the male employees who are making more income. However, the more women are paid the more satisfied they are with the work they perform.
 
 ## How satisfied are Research Scientist in their job at ChemicalRepo.
 ### DS.Attrition <- ggplot(DSJob, aes(x=Attrition, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Attrition") + ylab("Satisfied in their Job") + ggtitle("Attrition vs. Satisfied Job for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
 ### DS.Attrition
 
-In	a	scale	of	1	to	4	with	4	being	Very	Highly	in	satisfaction,	we	conclude	Research	Scientist	
-leaving	the	company	are	still	above	medium	rankings	for	being	satisfied	with	their	job.	
-Women	leaving	are	slightly	less	pleased	in	the	job	than	men.	The	same	is	true	for	those	
-currently	working	within	the	company. We	find	Women	are	less	satisfied	in	their	job	as	
-Research	Scientist	than	men.	However,	they	both	rank	the	job	satisfaction	between	a	
-Medium	to	High	satisfaction.
+We can conclude that the Research Scientists that leave the company are still above the medium level of job satisfaction. Women who leave the company were slightly less pleased in their positions than men, yet they generally had the same values when they were employed in the company. We find Women are overall less satisfied in their job as Research Scientists than men. However, they both rank the job satisfaction between a "Medium" to "High" satisfaction. 
 
 ## 4.d Looking only at life satisfaction data only for all of the employees in ChemicalRepo.
 ### library(ggplot2)
 ### par(las=2)
 
 ### Turnover <- ggplot(Data, aes(x=Jobs.Worked, y=Satisfied, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") + ylab("Satisfied in their Job") + ggtitle("Number of Jobs worked compaired to Satisfied Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
 ### Turnover
 
-Results	indicate	women	are	happier	when	they	start	in	the	workforce.	Women	who	
-frequently	change	employment	demonstrate	they	have	a	less	satisfied	work	experience.	
-Men	however	can	change	the	jobs	equal	to	women	and	maintain	the	same	satisfaction	as	
-they	did	when	they	took	their	1st	job.	There	is	no	impact	on	men	in	being	satisfied	with	
-work	compared	to	the	number	of	times	men	#change	#employment.	Overall	women	and	
-men	share	equal	satisfaction	working	when	they	have	changed	employer	less	than	2.5	
-times.
+Results indicate women are happier when they start in the workforce. Women who frequently change employment demonstrate they have a less satisfied work experience. Men however can change the jobs equal to women and maintain the same satisfaction as they did when they took their 1st job.  There is no impact on men in being satisfied with work compared to the number of times men change employment. Overall womenand men share equal satisfaction working when they have changed employer less than 2.5 times. 
 
 ## How many former jobs is considered normal in ChemicalRepo?
 ### Age.Jobs <- ggplot(Data, aes(x=Jobs.Worked, y=Age, group=Gender, color=Gender)) + geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") + ylab("Age") + ggtitle("Number of Jobs worked compaired to Age ") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
-
-
 ### Age.Jobs
 
-Results	also	indicate	on	average	both	women	and	men	between	the	approximate	age	of	33	
-to	45	change	jobs	at	almost	the	same	rate.	On	average	both	men	and	women	by	the	age	of	
-40	have	changed	jobs	almost	5	times.	When	compared	to	the	maximum	attrition	age	
-between	25-35	we	conclude	both	men	and	women	in	their	30’s	could	be	working	at	their	
-first	job	after	college.	We	find	the	attrition	relative	to	the	employee	taking	their	first	job	in	
-the	workforce.	It	is	relative	to	note	the	number	of	jobs	at	a	young	age	could	be	summer	high	
-school	jobs	and	as	a	student	working.	The	stronger	age	bracket	for	less	attrition	are	those	
-over	35,	be	aware,	those	who	work	between	1	to	almost	8	jobs	between	the	age	of	33-45	is	
-considered	average.	There	is	no	apparent	risk	by	this	age	bracket	and	this	many	number	of	
-jobs	worked.
+Results also indicate on average both women and men between the approximate age of 33 to 45 change jobs at almost the same rate. On average both men and women by the age of 40 have changed jobs almost 5 times. When compared to the maximum attrition age between 25 to 35 observed that both men and women in their 30's could be working in their first occupation since graduating. We find the attrition relative to the employee taking their first job in the workforce and to the number of jobs at a young age could be summer or high school jobs, even possibly a work-study or school based job (TA/Tutor/Etc). The lowest attrition rates are found in those over 35, although it is worth noting that the age range 33 to 45 considers up to 8 jobs a normal average. Thus were are able to conclude that there is no apparent risk by this age bracket and this many number of jobs worked.
+
+We recommend to either reduce the sales team to those below the age of 25 or increase it beyond 35 years of age. We also recommend, when hiring, do not hold back from hiring employees with at least 8 jobs before they are 45. We conclude this is normal and can be contributed to jobs held while in high school and college. Overall there is a larger section of men holding employment at ChemicalRepo by 60% of the workforce. We also determine those who live greater than 10 miles from their work are less likely to attrition. In conclusion ChemicalRepo could increase the number of females in their workforce, increase the hiring age beyond 35 years old for new employees and look for employees with a commute greater than 10 miles from the office.  Based off the information given, attrition will with reduce by concentration in this area of adjustments.
 
 ## CONCLUSION
 
-We	hypothesized	sales	representatives,	age	and	overall	commute	distance	contributes	to	
-attrition	within	a	company.	We	find	there	is	evidence	to	conclude	the	sales	representatives,	
-age	and	commute	influence	attrition.	In	addition,	we	find	there	no	guarantee	the	longer	
-someone	works	for	a	company	the	more	income	they	will	earn.	The	variance	of	any	
-increase	in	pay	base	off	of	age	is	negligible	compared	to	years	within	a	company	and	the	
-multiple	departments	in	ChemicalRepo.	Overall	our	hypothesis	did	prove	to	be	correct	on	
-attrition	and	our	hypothesis	is	correct.	We	do	add	ChemicalRepo	could	increae	the	income	
-in	Female	employees	and	increase	the	job	satisfaction.	We	also	find	commuting	distance	
-from	work	to	home	is	a	positive	relationship.	Those	who	work	farther	from	home	are	most	
-satisfied	in	the	job	as	a	Research	Scientist.
+We hypothesized sales representatives, age and overall commute distance contributes to attrition within a company. We find there is evidence to conclude the sales representatives, age and commute influence attrition. We have discovered that the longer that an employee works for the company, the more they will earn. We do add ChemicalRepo could increae the income in Female employees and increase the job satisfaction. We also found that an increase in commuting distance to work is a positive relationship, meaning employees who live further from work are generally more satisfied and that those who work furthest from home are most satisfied, and this also held true in the job role of a Research Scientist. 
 
 ## sessionInfo()
 
