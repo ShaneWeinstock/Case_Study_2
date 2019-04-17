@@ -21,39 +21,33 @@ DDSAnalytics a Fortune 1000 Company, is requesting their Data Scientist to revie
 ```r
 #install.packages("readxl")
 #install.packages("ggplot2")
+#install.packages("dataMaid")
 
 library(readxl)
-```
-
-```
-## Warning: package 'readxl' was built under R version 3.5.3
-```
-
-```r
 library(plyr)
-```
-
-```
-## Warning: package 'plyr' was built under R version 3.5.3
-```
-
-```r
 library(ggplot2)
+library(plyr)
+library(dataMaid)
 ```
 
 ```
-## Warning: package 'ggplot2' was built under R version 3.5.3
+## 
+## Attaching package: 'dataMaid'
+```
+
+```
+## The following object is masked from 'package:plyr':
+## 
+##     summarize
 ```
 
 ```r
-library(plyr)
-
 #Establish the working directory.
 getwd()
 ```
 
 ```
-## [1] "C:/Users/names/OneDrive/Documents/CS2/Case_Study_2"
+## [1] "/Users/ktheobald/Desktop/Kari/SMU /Doing Data Science/Homework/CaseStudy2/CaseStudy2/Working Folder"
 ```
 
 ### 2.a ) Read the CSV file (we have xlsx) into the dataset call it Data. Output how many rows and columns 
@@ -61,6 +55,16 @@ getwd()
 
 ```r
 New.Data <- read_xlsx("CaseStudy2-data.xlsx")
+```
+
+```
+## readxl works best with a newer version of the tibble package.
+## You currently have tibble v1.4.2.
+## Falling back to column name repair from tibble <= v1.4.2.
+## Message displays once per session.
+```
+
+```r
 Data <- data.frame(New.Data)
 head(Data) # original import of all data 
 ```
@@ -838,31 +842,8 @@ LifeSat2Home
 
 ```r
 LifeSat2Homelm <- lm(Satisfied ~ mlg.Home, data = Data)
-summary(LifeSat2Homelm)
-```
 
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ mlg.Home, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7327 -0.7317  0.2693  1.2678  1.2813 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.7331594  0.0435111  62.815   <2e-16 ***
-## mlg.Home    -0.0004991  0.0035506  -0.141    0.888    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.103 on 1468 degrees of freedom
-## Multiple R-squared:  1.346e-05,	Adjusted R-squared:  -0.0006677 
-## F-statistic: 0.01976 on 1 and 1468 DF,  p-value: 0.8882
-```
 
-```r
 # Research Scientist Satisfied vs miles from home.
 LifeSat2HomeDS<-ggplot(DSJob, aes(x=mlg.Home, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method=lm, se=FALSE) + xlab("Distance from Home") +  ylab("Satisfied with their Job") + ggtitle("Satisfied Life vs. Distance to Home for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 LifeSat2HomeDS
@@ -912,65 +893,12 @@ Workforce.Age
 ![](CaseStudy2_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
 
 ```r
-AgeSatlm <- lm(Satisfied ~ Age, data = Data)
-summary(AgeSatlm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ Age, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7392 -0.7319  0.2694  1.2668  1.2851 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.7503772  0.1198449  22.949   <2e-16 ***
-## Age         -0.0005906  0.0031508  -0.187    0.851    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.103 on 1468 degrees of freedom
-## Multiple R-squared:  2.393e-05,	Adjusted R-squared:  -0.0006573 
-## F-statistic: 0.03513 on 1 and 1468 DF,  p-value: 0.8513
-```
-
-```r
 # Research Scientist Satisfied vs Age of employee.
 DS.Age<-ggplot(DSJob, aes(x=Age, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Age (years) of Research Scientist") +  ylab("Satisfied in their Job") + ggtitle("The Age of a Research Scientist Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5))
 DS.Age
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-18-2.png)<!-- -->
-
-```r
-# Linear Regression Summary
-DSAgeSatlm <- lm(Satisfied ~ Age, data = DSJob)
-summary(DSAgeSatlm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ Age, data = DSJob)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.8296 -0.7894  0.2179  1.2033  1.3164 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.898911   0.264076  10.978   <2e-16 ***
-## Age         -0.003649   0.007482  -0.488    0.626    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.097 on 290 degrees of freedom
-## Multiple R-squared:  0.0008196,	Adjusted R-squared:  -0.002626 
-## F-statistic: 0.2379 on 1 and 290 DF,  p-value: 0.6261
-```
 
 
 We can conclude the employees as a whole in ChemicalRepo with men having a higher job satisfaction the older men become. As women grow older, they become less satisfied within the company. When reviewing the Research Scientist department, we find a very similar comparison for men and women. Women decline in job satisfaction at ChemicalRepo at an older age, while men increase within a small margin in job satisfaction at an older age in respect to the Research Scientist position.
@@ -987,68 +915,12 @@ Workforce.Alter
 ![](CaseStudy2_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 ```r
-# Multipole Linear Regression Summary
-Alterlm <- lm(Satisfied ~ M.S.D, data = Data)
-summary(Alterlm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ M.S.D, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7681 -0.7681  0.2838  1.2319  1.3028 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)   2.69725    0.06101  44.210   <2e-16 ***
-## M.S.DMarried  0.01895    0.07437   0.255    0.799    
-## M.S.DSingle   0.07084    0.07945   0.892    0.373    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.103 on 1467 degrees of freedom
-## Multiple R-squared:  0.000648,	Adjusted R-squared:  -0.0007145 
-## F-statistic: 0.4756 on 2 and 1467 DF,  p-value: 0.6216
-```
-
-```r
 # Research Scientist Satisfied vs Marital Status.
 DS.Alter<-ggplot(DSJob, aes(x=M.S.D, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Married, Single, Divorced") +  ylab("Satisfied in their Job") + ggtitle("Married, Single and Divorced Research Scientist, Satisfied in their Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Alter
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-19-2.png)<!-- -->
-
-```r
-# Multipole Linear Regression Summary
-DSAlterlm <- lm(Satisfied ~ M.S.D, data = DSJob)
-summary(DSAlterlm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ M.S.D, data = DSJob)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.8688 -0.8689  0.2130  1.1312  1.4355 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)    2.5645     0.1388  18.475   <2e-16 ***
-## M.S.DMarried   0.3043     0.1705   1.785   0.0753 .  
-## M.S.DSingle    0.2225     0.1742   1.278   0.2024    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.093 on 289 degrees of freedom
-## Multiple R-squared:  0.01099,	Adjusted R-squared:  0.004147 
-## F-statistic: 1.606 on 2 and 289 DF,  p-value: 0.2025
-```
 
 
 We can conclude that the male employees in ChemicalRepo are "Medium" to "Highly" satisfied. We are also able to conclude that women who are divorced are less satisfied than single women. Yet married women demonstrate the highest satisfaction rating of all three types of marital statuses. Married women are almost "Highly" satisfied at ChemicalRepo.  When reviewing Research Scientist women are consistent in job satisfaction at a "Medium" to "Highly" satisfied ranking. However, men who are married are closer to "highly satisfied" compared to their respectively lower, single and divorced Research Scientist. 
@@ -1065,66 +937,12 @@ Workforce.Promo
 ![](CaseStudy2_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 ```r
-# Linear Regression Summary
-Promolm <- lm(Satisfied ~ YbtwnPromo, data = Data)
-summary(Promolm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ YbtwnPromo, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7422 -0.7422  0.2578  1.2578  1.3513 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.742209   0.034777  78.851   <2e-16 ***
-## YbtwnPromo  -0.006233   0.008931  -0.698    0.485    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.103 on 1468 degrees of freedom
-## Multiple R-squared:  0.0003317,	Adjusted R-squared:  -0.0003492 
-## F-statistic: 0.4871 on 1 and 1468 DF,  p-value: 0.4853
-```
-
-```r
 # Research Scientist Satisfied vs Years between Promotions. 
 DS.Promo <- ggplot(DSJob, aes(x=YbtwnPromo, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Years between Promotions") +  ylab("Satisfied in Job") + ggtitle("Years between Promotions vs. Satisfaction as a Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Promo
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-20-2.png)<!-- -->
-
-```r
-# Linear Regression Summary
-DSPromolm <- lm(Satisfied ~ YbtwnPromo, data = DSJob)
-summary(DSPromolm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ YbtwnPromo, data = DSJob)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.8033 -0.7838  0.1967  1.1967  1.4497 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.80330    0.07730   36.26   <2e-16 ***
-## YbtwnPromo  -0.01946    0.02862   -0.68    0.497    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.096 on 290 degrees of freedom
-## Multiple R-squared:  0.001591,	Adjusted R-squared:  -0.001851 
-## F-statistic: 0.4623 on 1 and 290 DF,  p-value: 0.4971
-```
 
 
 We can conclude that the employees as a whole in ChemicalRepo are between "Medium" to "Highly" Satisfied in respect to the years between promotions. As to be expected, both women and men become slightly less satisfied in their Jobs the longer they wait between promotions. In review of employees titled as Research Scientist, women become less satisfied at a faster rate than men in years between promotions. Women max out at 10 years between promotion but men continue to wait longer as Research Scientist. This could be due to years of service within the company rather than the candidate being ignored for other reasons.
@@ -1142,66 +960,12 @@ Workforce.Income
 ![](CaseStudy2_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
 
 ```r
-# Linear Regression Summary
-Incomelm <- lm(Satisfied ~ Income.mos, data = Data)
-summary(Incomelm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ Income.mos, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7376 -0.7347  0.2672  1.2651  1.2938 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.739e+00  4.908e-02  55.820   <2e-16 ***
-## Income.mos  -1.676e-06  6.114e-06  -0.274    0.784    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.103 on 1468 degrees of freedom
-## Multiple R-squared:  5.122e-05,	Adjusted R-squared:  -0.0006299 
-## F-statistic: 0.07519 on 1 and 1468 DF,  p-value: 0.784
-```
-
-```r
 # Compare income compared to job satisfaction (male vs female).
 DS.Income <- ggplot(DSJob, aes(x=Income.mos, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Monthly Income") +  ylab("Satisfied in their Job") + ggtitle("Income as a Research Scientist vs. Satisfied Job for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
 DS.Income
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-21-2.png)<!-- -->
-
-```r
-# Linear Regression Summary
-DSIncomelm <- lm(Satisfied ~ Income.mos, data = DSJob)
-summary(DSIncomelm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ Income.mos, data = DSJob)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.8418 -0.8172  0.1911  1.1785  1.4307 
-## 
-## Coefficients:
-##               Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.957e+00  1.850e-01  15.983   <2e-16 ***
-## Income.mos  -5.663e-05  5.358e-05  -1.057    0.291    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.095 on 290 degrees of freedom
-## Multiple R-squared:  0.003838,	Adjusted R-squared:  0.0004025 
-## F-statistic: 1.117 on 1 and 290 DF,  p-value: 0.2914
-```
 
 
 We can conclude the employees as a whole in ChemicalRepo are between "Medium" to "Highly" Satisfied with the income or compensation they receive. While men have a slightly higher approval rating in job satisfaction compared to women with respects to income, the difference is marginal.  The results indicate as a Research Scientist, men are paid a higher monthly income overall. The more men are paid the less satisfied they are with work. They start with ranking their satisfaction beyond "Highly Satisfied" but as they increase past $5k a month, it's observed that their job satisfaction drops below that of women. Men who make almost $10k a month rank a "Medium Satisfaction" with the job.  Which is inversed to what most would consider as a normal response to an increase in pay.  We believe this could be contributed to an increase of demands on the male employees who are making more income. However, the more women are paid the more satisfied they are with the work they perform.
@@ -1210,37 +974,11 @@ We can conclude the employees as a whole in ChemicalRepo are between "Medium" to
 
 ```r
 DS.Attrition <- ggplot(DSJob, aes(x=Attrition, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab(" Attrition") +  ylab("Satisfied in their Job") + ggtitle("Attrition vs. Satisfied Job for Research Scientist") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+
 DS.Attrition
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
-
-```r
-#Linear Regression Summary
-DSAttritionlm <- lm(Satisfied ~ Attrition, data = DSJob)
-summary(DSAttritionlm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ Attrition, data = DSJob)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.8408 -0.8408  0.1592  1.1592  1.5745 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)   2.84082    0.06941   40.93   <2e-16 ***
-## AttritionYes -0.41528    0.17300   -2.40    0.017 *  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.086 on 290 degrees of freedom
-## Multiple R-squared:  0.01948,	Adjusted R-squared:  0.0161 
-## F-statistic: 5.762 on 1 and 290 DF,  p-value: 0.017
-```
 
 
 We can conclude that the Research Scientists that leave the company are still above the medium level of job satisfaction. Women who leave the company were slightly less pleased in their positions than men, yet they generally had the same values when they were employed in the company. We find Women are overall less satisfied in their job as Research Scientists than men. However, they both rank the job satisfaction between a "Medium" to "High" satisfaction. 
@@ -1248,6 +986,7 @@ We can conclude that the Research Scientists that leave the company are still ab
 ### 4.d  Looking only at life satisfaction data only for all of the employees in ChemicalRepo. 
 
 ```r
+library(ggplot2)
 par(las=2)
 
 Turnover <-  ggplot(Data, aes(x=Jobs.Worked, y=Satisfied, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") +  ylab("Satisfied in their Job") + ggtitle("Number of Jobs worked compaired to Satisfied Job") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
@@ -1256,33 +995,6 @@ Turnover
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-23-1.png)<!-- -->
 
-```r
-# Linear Regression Summary
-Turnoverlm <- lm(Satisfied ~ Jobs.Worked, data = Data)
-summary(Turnoverlm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Satisfied ~ Jobs.Worked, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -1.7948 -0.7702  0.2298  1.2298  1.4265 
-## 
-## Coefficients:
-##             Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  2.79480    0.04225  66.142   <2e-16 ***
-## Jobs.Worked -0.02459    0.01150  -2.137   0.0327 *  
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 1.102 on 1468 degrees of freedom
-## Multiple R-squared:  0.003102,	Adjusted R-squared:  0.002423 
-## F-statistic: 4.569 on 1 and 1468 DF,  p-value: 0.03273
-```
-
 
 
 Results indicate women are happier when they start in the workforce. Women who frequently change employment demonstrate they have a less satisfied work experience. Men however can change the jobs equal to women and maintain the same satisfaction as they did when they took their 1st job.  There is no impact on men in being satisfied with work compared to the number of times men change employment. Overall womenand men share equal satisfaction working when they have changed employer less than 2.5 times. 
@@ -1290,38 +1002,12 @@ Results indicate women are happier when they start in the workforce. Women who f
 ### How many former jobs is considered normal in ChemicalRepo?
 
 ```r
-Age.Jobs <-  ggplot(Data, aes(x=Age, y=Jobs.Worked, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") +  ylab("Age") + ggtitle("Number of Jobs worked Compared to Age ") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+Age.Jobs <-  ggplot(Data, aes(x=Jobs.Worked, y=Age, group=Gender, color=Gender)) +  geom_point(aes(color = Gender)) + stat_smooth(method="lm", se=FALSE) + xlab("Jobs Worked") +  ylab("Age") + ggtitle("Number of Jobs worked compaired to Age ") + theme(plot.title = element_text(hjust = 0.5)) + coord_flip()
+
 Age.Jobs
 ```
 
 ![](CaseStudy2_files/figure-html/unnamed-chunk-24-1.png)<!-- -->
-
-```r
-# Linear Regression Summary
-Age.Jobs.lm <- lm(Jobs.Worked ~ Age, data = Data)
-summary(Age.Jobs.lm)
-```
-
-```
-## 
-## Call:
-## lm(formula = Jobs.Worked ~ Age, data = Data)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -4.5839 -1.6175 -0.7982  1.1367  7.3657 
-## 
-## Coefficients:
-##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept) -0.332088   0.258986  -1.282      0.2    
-## Age          0.081933   0.006809  12.033   <2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 2.384 on 1468 degrees of freedom
-## Multiple R-squared:  0.08978,	Adjusted R-squared:  0.08916 
-## F-statistic: 144.8 on 1 and 1468 DF,  p-value: < 2.2e-16
-```
 
 
 
@@ -1338,18 +1024,16 @@ sessionInfo()
 ```
 
 ```
-## R version 3.5.2 (2018-12-20)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 17134)
+## R version 3.5.1 (2018-07-02)
+## Platform: x86_64-apple-darwin15.6.0 (64-bit)
+## Running under: macOS Sierra 10.12.6
 ## 
 ## Matrix products: default
+## BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United States.1252 
-## [2] LC_CTYPE=English_United States.1252   
-## [3] LC_MONETARY=English_United States.1252
-## [4] LC_NUMERIC=C                          
-## [5] LC_TIME=English_United States.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
@@ -1358,13 +1042,29 @@ sessionInfo()
 ## [1] ggplot2_3.1.1 plyr_1.8.4    readxl_1.3.1 
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.0       knitr_1.22       magrittr_1.5     tidyselect_0.2.5
-##  [5] munsell_0.5.0    colorspace_1.4-0 R6_2.4.0         rlang_0.3.1     
-##  [9] dplyr_0.8.0.1    stringr_1.4.0    tools_3.5.2      grid_3.5.2      
-## [13] gtable_0.2.0     xfun_0.6         withr_2.1.2      htmltools_0.3.6 
-## [17] assertthat_0.2.0 yaml_2.2.0       lazyeval_0.2.1   digest_0.6.18   
-## [21] tibble_2.0.1     crayon_1.3.4     purrr_0.3.2      codetools_0.2-15
-## [25] glue_1.3.0       evaluate_0.13    rmarkdown_1.12   labeling_0.3    
-## [29] stringi_1.3.1    compiler_3.5.2   pillar_1.3.1     cellranger_1.1.0
-## [33] scales_1.0.0     pkgconfig_2.0.2
+##  [1] Rcpp_1.0.0       bindr_0.1.1      knitr_1.21       magrittr_1.5    
+##  [5] tidyselect_0.2.5 munsell_0.5.0    colorspace_1.3-2 R6_2.3.0        
+##  [9] rlang_0.3.1      stringr_1.3.1    dplyr_0.7.8      tools_3.5.1     
+## [13] grid_3.5.1       gtable_0.2.0     xfun_0.4         withr_2.1.2     
+## [17] htmltools_0.3.6  assertthat_0.2.0 yaml_2.2.0       lazyeval_0.2.1  
+## [21] digest_0.6.18    tibble_1.4.2     crayon_1.3.4     bindrcpp_0.2.2  
+## [25] purrr_0.3.0      codetools_0.2-15 glue_1.3.0       evaluate_0.12   
+## [29] rmarkdown_1.11   labeling_0.3     stringi_1.2.4    compiler_3.5.1  
+## [33] pillar_1.3.1     cellranger_1.1.0 scales_1.0.0     pkgconfig_2.0.2
+```
+
+
+```r
+#create a codebook
+makeCodebook(Data, replace=TRUE)
+```
+
+```
+## Data report generation is finished. Please wait while your output file is being rendered.
+```
+
+```r
+#makeCodebook(Small, replace = TRUE)  #pull data for database Small
+#makeCodebook(True.Attrition, replace = TRUE)  #pull data for database True.Attrition
+#makeCodebook(DSJob, replace = TRUE)   #pull data for database DSJob
 ```
